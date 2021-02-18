@@ -1,0 +1,22 @@
+{
+  "name": "js-restudy",
+  "version": "1.0.0",
+  "description": "重学js系列",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KingComedy/js-restudy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KingComedy/js-restudy/issues"
+  },
+  "homepage": "https://github.com/KingComedy/js-restudy#readme",
+  "dependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
