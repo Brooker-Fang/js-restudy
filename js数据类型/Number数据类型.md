@@ -2,7 +2,6 @@ Number数据类型
 JavaScript所有数字都是64位浮点数，即使整数也是
 
 1 === 1.0 // true
-
 八进制字面量，以0开头。（严格模式下，八进制字面量无效，会报语法错误）
 
 console.log(012) // 10
@@ -34,14 +33,12 @@ parseInt('a') // NaN
 NaN不与任何值相等，包括本身
 
 0/0 === 0/0 // false
-
 可以用isNaN()判断是否为NaN
 
 isNaN(NaN) // true
 isNaN('a') // true 全局的isNaN会先将传入的参数转为数值在进行判断。'a'转为数值为NaN，所以为true
 Number.isNaN('a') // false Number的静态方法不会将传入的参数转为数值。所以是false
 isNaN(1) // false
-
 NaN与任何数值操作都为NaN
 
 为什么最大的安全整数是 - 2^53 ~ 2^53 (不包含边界-2^53和2^53)  
@@ -59,7 +56,11 @@ IEEE 754规定，有效数字第一位默认总是1，不保存在64位浮点数
 1.335.toFixed(2) // 1.33 toFixed不会四舍五入
 (0.07 * 100 + 0.14 * 100 )/100 // 即使通过乘法转为整数去计算，误差也还是存在
 
+主要原因：因为计算机存储时会把尾数超过52位的部分截取掉，0.1和0.2转为二进制会出现无限循环，最终超过的位数会被截取掉，所以导致计算不精确
 
+0.1 >> 0.0001 1001 1001 …（无限循环）
+
+解决：使用第三方库如bignumber，Math.js
 
 科学计数法表示的两种情况
 1、小数点前的位数多于21位
@@ -79,6 +80,12 @@ function toNonExponential(num) {
 }
 
 相关api
+parseInt()：将字符串转为数值
+1、parseInt会从第一个非空格字符开始转换 ，如果不是数值字符，则返回NaN
+
+parseInt('   1') // 1  parseInt会从第一个非空格字符开始转换 
+parseInt('') // NaN 如果不是数值字符，则返回NAN
+
 isFinite(num) ：判断传入的值是否是一个有穷数。
 
 isFinite(Infinity) // flase Infinity、-Infinity、NaN和undefined这几个值都会返回false
