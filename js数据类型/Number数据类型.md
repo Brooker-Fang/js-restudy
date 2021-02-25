@@ -70,21 +70,56 @@ function toNonExponential(num) {
     var m = num.toExponential().match(/\d(?:\.(\d*))?e([+-]\d+)/);
     return num.toFixed(Math.max(0, (m[1] || '').length - m[2]));
 }
+
 相关api
 parseInt(string, radix)：将字符串转为数值
-1、parseInt会从第一个非空格字符开始转换 ，如果不是数值字符，则返回NaN
+1、parseInt会从第一个非空格字符开始转换 ，直到解析到一个无效的数值字符，如果不是数值字符(如果是正负号后面紧跟着数值除外)，则返回NaN
 
 parseInt('   1') // 1  parseInt会从第一个非空格字符开始转换 
+parseInt('+') // NaN
+parseInt('+1.345') // 如果正负号紧跟着数值，则不会返回NaN
+parseInt('   123k') // 123 截取遇到第一个非字符为止
+parseInt('1.23') // 1
 parseInt('') // NaN 如果不是数值字符，则返回NAN
 
-2、
+2、如果传入的不是字符串，则会先转为字符串
+
+parseInt(1) === parseInt('1') // 1
+
+3、如果字符串以"0x"开头，就会被解析为十六进制整数
+
+parseInt('0x10') // 16
+parseInt('10', 16) // 16 如果传入第二个参数，0x可以省略
+
+4、在严格模式下，字符串以"0"开头，就会被解析为十进制整
+
+parseInt('010') // 10
+
+5、如果第一个参数传入的数值能被转换为科学计数法，则会先转为数值的科学计数法，在转为字符串
+
+parseInt(1000000000000000000001) // 1
+1000000000000000000001 会先转为 1e+21
+即 parseInt(1e+21) === 1
+
+6、传入的第二个参数会被转为整数,如果传的不是有效数值，则默认解析为十进制
+
+parseInt(10, '2') === parseInt(10, 2) // 2
+parseInt(10, 0) // 10
+parseInt(10, null) // 10
+parseInt(10, undefined) // 10
+parseInt(10, 'abc') // 10
+
+7、如果传入的第二个参数为1、或者大于36，则返回NaN
+
+parseInt(10, 1) // NaN
+parseInt(10, 37) // NaN
 
 parseFloat()：解析一个参数（必要时先转换为字符串）并返回一个浮点数
 
 
 
 isFinite(num) ：判断传入的值是否是一个有穷数。
-isFinite(Infinity) // flase Infinity、-Infinity、NaN和undefined这几个值都会返回false
+isFinite(Infinity) // false Infinity、-Infinity、NaN和undefined这几个值都会返回false
 isFinite(1) // true
 isFinite('1') // true 
 Number.isFinite('1') // false 
