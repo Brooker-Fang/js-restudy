@@ -6,11 +6,9 @@ JavaScript所有数字都是64位浮点数，即使整数也是
 
 console.log(012) // 10
 console.log(018) // 18 如果后面的数字超过0~7范围，则会忽略前面的0，后面的数值作为十进制
-
 十六进制的字面量，以0x开头
 
 console.log(0x10) // 16
-
 Number.MAX_VALUE 可表示的最大的数。超过则为+Infinity 正无穷
 Number.MIN_VALUE 可表示的最小的数。小于则为-Infinity 负无穷
 
@@ -23,13 +21,11 @@ Number.MIN_SAFE_INTEGER, 最小的安全整数 =  - 2^53 + 1 = - 9007199254740
 9007199254740992 === 9007199254740992 +1  // true
 9007199254740991 + 2 // 9007199254740992
 -9007199254740992 - 3 // -9007199254740996
-
 NaN(not a number)
 NaN 用于表示一个本来要返回数值的操作数未返回数值的情况。
 
 parseInt('a') // NaN
 0/0 // NaN
-
 NaN不与任何值相等，包括本身
 
 0/0 === 0/0 // false
@@ -50,12 +46,10 @@ IEEE 754规定，有效数字第一位默认总是1，不保存在64位浮点数
 2^53转为二进制为 1.000...(52个0)
 2^53转为二进制为 1.000...1(52个0),最终存储到计算机也是1.000...(52个0)
 所以Math.pow(2, 53) + 1 === Math.pow(2, 53) 为true
-
 浮点数计算不精确问题
 0.1 + 0.2 // 0.30000000000000004
 1.335.toFixed(2) // 1.33 toFixed不会四舍五入
 (0.07 * 100 + 0.14 * 100 )/100 // 即使通过乘法转为整数去计算，误差也还是存在
-
 主要原因：因为计算机存储时会把尾数超过52位的部分截取掉，0.1和0.2转为二进制会出现无限循环，最终超过的位数会被截取掉，所以导致计算不精确
 
 0.1 >> 0.0001 1001 1001 …（无限循环）
@@ -66,11 +60,9 @@ IEEE 754规定，有效数字第一位默认总是1，不保存在64位浮点数
 1、小数点前的位数多于21位
 
 123456789123456789123456 // 1.234567891234568e+23 即1.234567891234568*10^23
-
 2、小数点后连续6个0或以上
 
 0.0000001  // 1e-7 即1 * 10^-7
-
 处理科学计数法的显示问题：
 
 function toNonExponential(num) {
@@ -78,19 +70,25 @@ function toNonExponential(num) {
     var m = num.toExponential().match(/\d(?:\.(\d*))?e([+-]\d+)/);
     return num.toFixed(Math.max(0, (m[1] || '').length - m[2]));
 }
-
 相关api
-parseInt()：将字符串转为数值
+parseInt(string, radix)：将字符串转为数值
 1、parseInt会从第一个非空格字符开始转换 ，如果不是数值字符，则返回NaN
 
 parseInt('   1') // 1  parseInt会从第一个非空格字符开始转换 
 parseInt('') // NaN 如果不是数值字符，则返回NAN
 
-isFinite(num) ：判断传入的值是否是一个有穷数。
+2、
 
+parseFloat()：解析一个参数（必要时先转换为字符串）并返回一个浮点数
+
+
+
+isFinite(num) ：判断传入的值是否是一个有穷数。
 isFinite(Infinity) // flase Infinity、-Infinity、NaN和undefined这几个值都会返回false
 isFinite(1) // true
 isFinite('1') // true 
 Number.isFinite('1') // false 
 和全局的 isFinite() 函数相比，Number.isFinite不会强制将一个非数值的参数转换成数值，只有数值类型的值，且是有穷的（finite），才返回 true
 
+Number.isInteger(value)：判断此参数是否为整数
+Number.Number(value):判断传入的参数值是否是一个“安全整数”
