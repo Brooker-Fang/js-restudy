@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="btn">点击</button>
+  <script>
+    /* 
+      为什么需要防抖和节流
+        在一些高频事件触发的场景下，不想多次执行触发函数
+        场景： 
+          滚动事件
+          输入的模糊匹配
+          轮播图切换
+          短时间多次点击操作
+        防抖：对于高频操作，只希望执行一次，可以为第一次或者最后一次
+        节流：在某段时间内，事件只能触发一次
+    */
+   var btn = document.getElementById('btn')
+   btn.onclick = debounce(btnClick)
+   function btnClick(e) {
+     console.log(this, e)
+    console.log('click')
+   }
+  /* 
+   wait： 事件触发多久后开始执行
+    immediate: 执行点击的第一次还是最后一次
+  */
+   function debounce(handle, wait = 300, immediate = false) {
+     let timer = null
+    return function (...args) {
+      let self = this
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+         handle.call(self, ...args)
+      }, wait)
+    }
+   }
+  </script>
+</body>
+</html>
