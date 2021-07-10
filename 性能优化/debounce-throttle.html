@@ -34,12 +34,31 @@
      let timer = null
     return function (...args) {
       let self = this
-      clearTimeout(timer)
+      timer && clearTimeout(timer)
       timer = setTimeout(() => {
          handle.call(self, ...args)
       }, wait)
     }
    }
+   /* 
+
+   */
+  function throttle(handle, wait = 300) {
+    let last = 0
+    return function(...args) {
+      let self = this
+      if(!last) {
+        last = Date.now()
+        handle.call(self, ...args)
+      } else {
+        let now = Date.now()
+        if(now - last >= wait) {
+          last = now
+          handle.call(self, ...args)
+        }
+      }
+    }
+  }
   </script>
 </body>
 </html>
