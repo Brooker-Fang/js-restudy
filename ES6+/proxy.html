@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    var box = document.querySelector('#root')
+    var data = {
+      name: 'fhh',
+      age: 18,
+      obj: {
+        job: 'web'
+      }
+    }
+    var dataHandler = {
+      set(target, prop, newVal) {
+        console.log('set==', target, prop, newVal)
+      },
+      get(target, prop, receiver) {
+        console.log('get==', target, prop, receiver)
+        return target[prop]
+      }
+    }
+    var p = new Proxy(data, dataHandler)
+    p.name = 'whh'
+    p.age
+    /* 
+      proxy 默认对对象的操作 使用的是Reflect 的api方法
+    */
+  //  如： 如果没有自定义proxy 的set、get方法，则默认为
+    var defaultP = new Proxy(data, {
+      get(target, prop) {
+        return Reflect.get(target, prop)
+      },
+      set(target, prop, newVal) {
+        Reflect.set(target, newVal)
+      }
+    })
+    /* 
+      proxy vs defineProperty 
+        0、defineProperty只能监听到对象属性的读取，所以需要遍历对象的每个属性做defineProperty的操作，
+          而proxy代理的是对象级别的，不需要遍历属性，即只要代理的对象，对象下的属性发送改变就能监听得到
+        1、defineProperty只能监听到对象属性的读取，如对象属性的删除、新增就监听不到，而proxy可以通过deleteProperty方法 监听到对象的删除
+        2、proxy 可以更好的支持数组对像的监听。Object.defineProperty 无法响应数组操作, vue2源码 对数组的监听是通过 重写数组方法实现的.
+          而proxy可以监听到数组的操作
+        3、proxy是以非侵入的方式监管了对象的读写
+    */
+   /* 
+    1、 监听对象删除、新增操作
+   */
+  var my = {
+    name: 'fhh'
+  }
+  var myProxy= new Proxy(my, {
+    set(target, prop, val) {
+      console.log(target, 'set', prop, val)
+      Reflect.set(target, prop, val)
+    },
+    deleteProperty(target, prop) {
+      console.log(target, '执行删除操作', prop)
+      // delete target[prop]
+      return Reflect.deleteProperty(target, prop)
+    }
+  })
+  delete myProxy.name
+  myProxy.age = 18
+  console.log('my==', my)
+  /* 
+    2、更好的支持监听数组对象
+  */
+ var arr = [1,2,3,4]
+ var arrProxy = new Proxy(arr, {
+   set(target, prop, value) {
+     console.log('arr set', prop, value)
+     target[prop] = value
+     return true
+   },
+   deleteProperty(target, prop) {
+      console.log(target, '执行删除操作', prop)
+      return Reflect.deleteProperty(target, prop)
+    }
+ })
+//  arrProxy.push(6)
+ arrProxy.splice(0,1)
+ console.log(arr)
+ /* 
+  proxy 也是不支持 嵌套对象的 代理，需要递归创建proxy
+  */
+  </script>
+</body>
+</html>
