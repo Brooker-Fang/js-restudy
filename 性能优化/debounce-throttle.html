@@ -8,57 +8,80 @@
 </head>
 <body>
   <button id="btn">点击</button>
+  <div id="box" style="height: 200px;background-color: deepskyblue;"></div>
   <script>
     /* 
       为什么需要防抖和节流
         在一些高频事件触发的场景下，不想多次执行触发函数
         场景： 
           滚动事件
-          输入的模糊匹配
-          轮播图切换
+          搜索框输入关键字请求服务器的模糊匹配
           短时间多次点击操作
-        防抖：对于高频操作，只希望执行一次，可以为第一次或者最后一次
+        防抖：多次连续的操作，只有在某一次操作后再指定时间内没有在操作，这一次才算有效
         节流：在某段时间内，事件只能触发一次
     */
    var btn = document.getElementById('btn')
-   btn.onclick = debounce(btnClick)
+   btn.onclick = debounce(btnClick, 1000, false)
    function btnClick(e) {
      console.log(this, e)
     console.log('click')
    }
   /* 
-   wait： 事件触发多久后开始执行
+    wait： 事件触发多久后开始执行
     immediate: 执行点击的第一次还是最后一次
   */
    function debounce(handle, wait = 300, immediate = false) {
      let timer = null
     return function (...args) {
       let self = this
+      // init 是否立即执行，且是第一次点击（timer为null说明是第一次点击）
+      let init = immediate && !timer
+      // 每次事件被触发，清除之前的定时器
       timer && clearTimeout(timer)
       timer = setTimeout(() => {
-         handle.call(self, ...args)
+        timer = null
+        !immediate ? handle.call(self, ...args) : null
       }, wait)
+      init ? handle.call(self, ...args) : null
     }
    }
    /* 
-
+      定时器实现节流
+   */
+  function throttleWithSetTime(handle, wait = 300) {
+    let timer = null
+    return function(...args) {
+      if(timer) return
+      let self = this
+      timer = setTimeout(() => {
+        handle.apply(self, args)
+        timer = null
+      }, wait)
+    }
+  }
+   /* 
+    时间戳实现节流
    */
   function throttle(handle, wait = 300) {
-    let last = 0
+    let timer = null
     return function(...args) {
       let self = this
-      if(!last) {
-        last = Date.now()
+      let now = Date.now()
+      if(now - last > wait) {
+        last = now
         handle.call(self, ...args)
-      } else {
-        let now = Date.now()
-        if(now - last >= wait) {
-          last = now
-          handle.call(self, ...args)
-        }
+        
       }
     }
   }
+  var box = document.querySelector('#box')
+  var move = function (ev) {
+    console.log('ev===', ev.clientX)
+    this.innerHTML = ev.clientX
+  }
+  // box.onmousemove = throttle(move, 300)
+  box.onmousemove = throttleWithSetTime(move, 300)
+  // box.onmousemove = move
   </script>
 </body>
 </html>
