@@ -10,8 +10,73 @@
   <script >
     /* 
       Reflect主要是为了 统一对对象操作的API，Reflect内部封装了一系列对对象的底层操作
-        Reflect是静态类，类似Math  
+        Reflect是内置对象，即静态类，类似Math  
         Reflect成员方法就是Proxy处理对象的默认实现
+      13个静态方法：
+        Reflect.defineProperty 与 Object.defineProperty类似，
+          但是当对象属性无法定义时Object.defineProperty抛出错误，
+            而Reflect.defineProperty会返回false，成功时返回true，但如果参数target不是对象还是会报错。
+    */
+   /* 
+    Reflect.apply(target, this.thisArgument , argumentsList) 和 Function.prototype.apply() 一样
+      target：要调用的目标函数
+      thisArgument：this的指向
+      argumentsList： 参数数组
+   */
+   function print(a,b,c) {
+     console.log(this.x, this.y)
+     console.log(a,b,c)
+   }
+    Reflect.apply(print, {
+      x:'x',y:'y'
+    }, [1,2,3]); 
+    console.log(Math.max.apply(Math, [1,2,3,4]));  
+    console.log(Reflect.apply(Math.max, undefined, [1,2,3,4]));  
+    /* 
+      Reflect.construct(target, argumentsList [, newTarget])
+        target: 被运行的目标函数
+        argumentsList: 调用构造函数的数组或者伪数组
+        newTarget：该参数为构造函数，如果没有newTarget参数， 默认和target一样
+    */
+   class Parent{
+     constructor(name) {
+      console.log('child Parent')
+       this.name = name
+     }
+     getName() {
+       console.log('ParentName',this.name)
+     }
+   }
+   class Child{
+     constructor(name) {
+       console.log('child constructor')
+      this.name = name
+     }
+     getName(){
+       console.log('ChildName',this.name)
+      //  return this.name
+     }
+   }
+   let child = Reflect.construct(Parent, ['fhh'], Child)
+   console.log('child===', child, child.getName(),child.constructor === Child)
+    /* 
+      Reflect.defineProperty 与 Object.defineProperty类似，
+          但是当对象属性无法定义时Object.defineProperty抛出错误，
+            而Reflect.defineProperty会返回false，成功时返回true，但如果参数target不是对象还是会报错。
+     */
+    const o = {};
+    Object.defineProperty(o, 'name', {
+      value: 'fhh',   // name属性值
+      writable: false,       // 不可被修改
+    });
+    console.log(Reflect.defineProperty(o, 'name', {
+      value: 'whh'
+    })) // 返回false
+    Object.defineProperty(o, 'name', {
+      value: 'whh'
+    }); // 报错
+    /* 
+      getPrototypeOf(target) 和 Object.getPrototypeOf一样，返回指定对象的原型
     */
   </script>
 </body>

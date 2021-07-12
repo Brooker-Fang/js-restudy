@@ -18,13 +18,14 @@
       }
     }
     var dataHandler = {
-      set(target, prop, newVal) {
-        console.log('set==', target, prop, newVal)
+      set(target, prop, newVal, receiver) {
+        console.log('set==', target, prop, newVal, receiver, this)
       },
       get(target, prop, receiver) {
         console.log('get==', target, prop, receiver)
         return target[prop]
-      }
+      },
+      apply()
     }
     var p = new Proxy(data, dataHandler)
     p.name = 'whh'
