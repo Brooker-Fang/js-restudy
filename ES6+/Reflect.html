@@ -36,7 +36,7 @@
       Reflect.construct(target, argumentsList [, newTarget])
         target: 被运行的目标函数
         argumentsList: 调用构造函数的数组或者伪数组
-        newTarget：该参数为构造函数，如果没有newTarget参数， 默认和target一样
+        newTarget：该参数为构造函数，表示使用Reflect.construct后生成的对象是谁的实例，如果没有newTarget参数， 默认和target一样
     */
    class Parent{
      constructor(name) {
@@ -58,26 +58,45 @@
      }
    }
    let child = Reflect.construct(Parent, ['fhh'], Child)
-   console.log('child===', child, child.getName(),child.constructor === Child)
+   console.log('child===', child, child.getName()) // ChildName
     /* 
       Reflect.defineProperty 与 Object.defineProperty类似，
           但是当对象属性无法定义时Object.defineProperty抛出错误，
             而Reflect.defineProperty会返回false，成功时返回true，但如果参数target不是对象还是会报错。
+      Reflect.isExtensible(target) 与 Object.isExtensible类似，
+      Reflect.preventExtensions(target) 与 Object.preventExtensions类似，
+        不同在于 返回值
      */
     const o = {};
     Object.defineProperty(o, 'name', {
       value: 'fhh',   // name属性值
       writable: false,       // 不可被修改
+      configurable: false // 不可设置，亦不能删除
     });
     console.log(Reflect.defineProperty(o, 'name', {
       value: 'whh'
     })) // 返回false
-    Object.defineProperty(o, 'name', {
-      value: 'whh'
-    }); // 报错
+    try {
+      Object.defineProperty(o, 'name', {
+        value: 'whh'
+      }); // 会直接报错，需要try catch捕捉异常
+    } catch (error) {}
+    
     /* 
-      getPrototypeOf(target) 和 Object.getPrototypeOf一样，返回指定对象的原型
+      Reflect.getPrototypeOf(target) 和 Object.getPrototypeOf一样，返回指定对象的原型
+        不同：但如果参数target不是对象，前者会报错，后者会强制转为对象
+      Reflect.setPrototypeOf(target, prototype) 和 Object.getPrototypeOf一样
+        不同：但如果参数target不是对象，前者会报错，后者会返回target
     */
+    Object.getPrototypeOf(1, {})
+    try {
+      Reflect.setPrototypeOf(1, {}) 
+    } catch (error) {
+      console.log(error)
+    }
+   /* 
+      Reflect.deleteProperty 和 delete target[name] 一样
+   */
   </script>
 </body>
 </html>
