@@ -84,9 +84,11 @@
     
     /* 
       Reflect.getPrototypeOf(target) 和 Object.getPrototypeOf一样，返回指定对象的原型
-        不同：但如果参数target不是对象，前者会报错，后者会强制转为对象
+        不同：但如果参数target不是对象，前者会报错，后者会将参数强制转为对象
       Reflect.setPrototypeOf(target, prototype) 和 Object.getPrototypeOf一样
         不同：但如果参数target不是对象，前者会报错，后者会返回target
+      Reflect.getOwnPropertyDescriptor 和 Object.getOwnPropertyDescriptor 一样，返回属性描述符，不存在返回undefined
+        不同：如果第一个参数target不是对象，前者会报错，后者会将参数强制转为对象
     */
     Object.getPrototypeOf(1, {})
     try {
@@ -97,6 +99,40 @@
    /* 
       Reflect.deleteProperty 和 delete target[name] 一样
    */
+  /* 
+    Reflect.ownKeys(target) 返回由目标对象自身的属性键组成的数组，包括symbol属性
+      相当于 Object.getOwnPropertyNames(target).concat(Object.getOwnPropertySymbols(target))
+  */
+ let obj = {
+   [Symbol('name')]: 'fhh',
+   age: 18 
+ }
+ console.log(Object.getOwnPropertyNames(obj), Object.getOwnPropertySymbols(obj))
+ console.log(Reflect.ownKeys(obj))
+ /* 
+  Reflect.has 等同于  prop in obj 
+ */
+  console.log('age' in obj, Reflect.has(obj,'age'))
+  /* 
+    Reflect.set(target, prop, value, receiver)
+      receiver: 如果prop属性 设置了set函数，则set函数的this指向receiver
+    Reflect.get(target, prop, receiver)
+      receiver: 如果prop属性 设置了get函数，则get函数的this指向receiver
+  */
+  let setObj = {
+    myCount: 5,
+    set count(val) {
+      this.count += val
+    },
+    get count() {
+      console.log(this.count)
+    }
+  }
+  let receiverObj = {
+    count: 10
+  }
+  Reflect.set(setObj, 'count', 11, receiverObj)
+  Reflect.get(setObj, 'count', receiverObj)
   </script>
 </body>
 </html>
