@@ -34,11 +34,7 @@ console.log(i)
   + 创建执行上下文由三部分组成：即This Binding、VariableEnvironment（变量环境）、LexicalEnvironment（词法环境）
     + This Binding即this的指向
     + 变量环境VariableEnvironment 保存着 var声明的变量和函数、并且初始化值为undefined，编译阶段如果发现同名的 变量或函数，则会进行覆盖
-    + 词法环境Lexical Environment 由环境记录 和 对外部环境的引用 组成
-      + 对外部环境的引用即 outer指针，指向包含当前词法环境最近的外部词法环境，就是由每个词法环境的outer指针，形成的作用域链
-      + 环境记录 分为声明式环境记录 和 对象式环境记录
-        + 声明式环境记录 DeclarativeEnvironment：用来记录直接有标识符的元素，如let、const声明的变量，class、module、import以及函数声明
-        + 对象式环境记录 ObjectEnvironmentRecord：
+    + 词法环境Lexical Environment 保存着let、const声明的变量和函数
   + js引擎会把声明以外的代码编译为字节码，作为可执行代码
 + 执行阶段：
   + 执行代码时，遇到变量或者函数，会到执行上下文所保存的变量环境对象VariableEnvironment 查找
