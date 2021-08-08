@@ -1,13 +1,69 @@
 ## this
-判断this的四条规则，按照优先级依次为：
+判断this的五条规则，按照优先级依次为：
 + 如果通过new调用，则this绑定到新创建的对象
 + 由call、apply、bind强制绑定，this指向绑定的对象
 + 由上下文对象调用，this指向那个上下文对象
 + 默认绑定全局对象
-+ 当使用严格模式时，this无法默认绑定this。（注意：这里的严格模式指的是 函数创建的时候是否处于严格模式，而不是函数的调用位置）
++ 当使用严格模式时，普通函数的this无法默认绑定this。（注意：这里的严格模式指的是 函数创建的时候是否处于严格模式，而不是函数的调用位置）
 
+### 由上下文对象调用，this指向那个上下文对象
+这个是比较让人纠结的规则。如
+```js
+let obj = {
+  testThis: function() {
+    console.log(this)
+  },
+  testThis2: function() {
+    return function() {
+      console.log(this)
+    }
+  }
+}
+obj.testThis() // obj
+obj.testThis2()() // window testThis2执行后返回新的函数，新函数执行时并没有上下文，所以指向默认绑定的全局对象
+let test = obj.testThis 
+test() // window
+```
+其实可以这么理解，当创建函数的间接引用，如函数参数里的回调函数等，this指向全局对象。这里不包括箭头函数和强制绑定
+```js
+let obj = {
+  testThis: function() {
+    console.log(this)
+  },
+  testThis2: function(cb) {
+    cb()
+  }
+}
+obj.testThis() // obj
+// 下面都是创建了函数的间接引用
+let testThis = obj.testThis
+testThis() // window
+obj.testThis2(obj.testThis) // window
+```
+其实setTimeout 和 setInternal 传入的函数和上面一样的道理，亦是将函数作为回调函数去执行
+```js
+function testTimeout1() {
+  setTimeout(function(){
+    console.log(this) // 一直指向window
+  })
+}
+function testTimeout2() {
+  setTimeout(() => {
+    console.log(this) // this继承testTimeout2的this
+  })
+}
+let obj = {
+  name: 'fhh'
+}
+testTimeout1.call(obj) // window
+
+testTimeout2.call(obj) // obj
+testTimeout2() // window
+// 如果setTimeout传入的函数是经过 强制绑定的，this指向绑定的上下文对象
+setTimeout(testTimeout2.bind(obj))
+```
 ### 严格模式下的this
-当使用严格模式时，this无法默认绑定this。
+当使用严格模式时，普通函数的this无法默认绑定this。
 ```js
 "use strict"
 function testThis() {
@@ -23,16 +79,96 @@ testThis2() // undefined
 ```
 严格模式指的是 函数创建的时候是否处于严格模式，而不是函数的调用位置
 ```js
-
+function testThis() {
+  console.log(this)
+}
+function testThis2() {
+  "use strict"
+  testThis()
+}
+testThis2() // window
+```
+使用严格模式时，this的指向并不一定为undefined
+```js
+"use strict"
+console.log(this) // window
+let testThis = () => {
+  console.log(this) 
+}
+testThis() // window
+setTimeout(function(){
+  console.log(this) // window
+})
 ```
 ## 箭头函数
 + 箭头函数的主要设计目的就是 以特定的方式改变this的行为特性
-+ 在箭头函数内部，this绑定不是动态的，而是词法的。可以理解为，箭头函数的this和词法环境医院，由代码的书写位置决定
-## 这几种情况的this指向window
-+ 立即执行函数
-+ setTimeout 和 setInternal 传入的函数（不包括箭头函数）
-
++ 在箭头函数内部，this绑定不是动态的，而是词法的，继承最近的外部词法环境的this。可以理解为，箭头函数的this和词法环境（即词法作用域）一样，由代码的书写位置决定
++ 箭头函数的this不根据五条规则判断，而是根据当前的词法作用域决定
+```js
+let obj = {
+  name: 'fhh',
+  testThis: () => {
+    // 函数是在全局作用域定义的  所以this指向全局对象
+    console.log(this)
+  }
+}
+obj.testThis() // window
+obj.testThis.call({name: 'gg'}) // window 使用强制绑定也没用
+function testTimeout2() {
+  setTimeout(() => {
+    console.log(this) // this指向了testTimeout2的this
+  })
+}
+testTimeout2.call(obj) // obj 
+testTimeout2() // window 
+```
 ## call、apply、bind原理实现
-## 总结
-+ this的指向是在函数调用时决定的，而词法环境则相反，是在书写完代码决定的
-+ 箭头函数没有this绑定，所以会需要找外部词法环境中的this，所以箭头函数的this词法环境一样，由代码的书写位置决定
+
+## 面试题
+```js
+var name = 'window'
+ 
+var obj = {
+  name: 'p1',
+  test1: function () {
+    console.log(this.name)
+  },
+  test2: () => console.log(this.name),
+  test3: function () {
+    return function () {
+      console.log(this.name)
+    }
+  },
+  test4: function () {
+    return () => console.log(this.name)
+  },
+  test5: () => {
+    setTimeout(() => {
+      console.log(this.name)
+    })
+  },
+  test6: function() {
+    setTimeout(() => {
+      console.log(this.name)
+    })
+  }
+}
+
+obj.test1()  
+obj.test1.call({name:'p2'}) 
+ 
+obj.test2()  
+obj.test2.call({name:'p2'}) 
+ 
+obj.test3()()  
+obj.test3().call({name:'p2'})  
+obj.test3.call({name:'p2'})()  
+ 
+obj.test4()()  
+obj.test4().call({name:'p2'}) 
+obj.test4.call({name:'p2'})() 
+
+obj.test5()
+obj.test6() 
+```
+ 正确答案：obj、p2
