@@ -127,11 +127,8 @@ function testThis
 call方法模拟
 ```js
 Function.prototype.myCall = function(context, ...args) {
-  if(typeof this !== 'function') {
-    throw new TypeError('...')
-  }
-  let ctx = context || window
-  let fn = Symbol()
+  const ctx = context || window
+  const fn = Symbol()
   args = args || []
   ctx[fn] = this
   ctx[fn](...args)
@@ -143,16 +140,14 @@ function showName(age) {
   console.log('name===' + this.name + ',age===' + age)
 }
 showName(18)
+showName.myCall({name: 'fhh'})
 showName.myCall({name: 'fhh'}, 18)
 ```
 apply方法模拟
 ```js
 Function.prototype.myApply = function(context, args) {
-  if(typeof this !== 'function') {
-    throw new TypeError('...')
-  }
-  let ctx = context || window
-  let fn = Symbol()
+  const ctx = context || window
+  const fn = Symbol()
   args = args || []
   ctx[fn] = this
   ctx[fn](...args)
@@ -163,18 +158,19 @@ function showName(age) {
   console.log('name===' + this.name + ',age===' + age)
 }
 showName(18)
+showName.myApply({name: 'fhh'})
 showName.myApply({name: 'fhh'}, [18])
 ```
 bind方法模拟
 ```js
 Function.prototype.myBind = function(context, ...args) {
-  if(typeof this !== 'function') {
-    throw new TypeError('...')
-  }
+  const ctx = context || window
   args = args || []
-  return context === null || typeof context !== 'object' ? this : function() {
-    context.fn(...args)
-    delete context.fn
+  return function newFn(...newArgs) {
+    if (this instanceof newFn) {
+      return new fn(...args, ...newArgs)
+    }
+    return 
   }
 }
 var name = 'window'
