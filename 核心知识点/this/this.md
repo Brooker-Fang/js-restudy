@@ -163,26 +163,34 @@ showName.myApply({name: 'fhh'}, [18])
 ```
 bind方法模拟
 ```js
-Function.prototype.myBind = function(context, ...args) {
+Function.prototype.myBind = function(context, ...baseArgs) {
   const ctx = context || window
-  args = args || []
-  return function newFn(...newArgs) {
-    if (this instanceof newFn) {
-      return new fn(...args, ...newArgs)
-    }
-    return 
+  const fn = this
+  baseArgs = baseArgs || []
+  const fBound = function(...args) {
+    // 如果作为构造函数，则this指向新的对象
+    return fn.apply(this instanceof fBound ? this : ctx, [...baseArgs, ...args])
   }
+  // 创建空函数
+  const noop = function() {}
+  noop.prototype = this.prototype
+  fBound.prototype = new noop()
+  return fBound
 }
 var name = 'window'
 function showName(age) {
+  this.age = age
   console.log('name===' + this.name + ',age===' + age)
+  return this
 }
-showName.myBind({name: 'fhh'}, 18)()
+let newShowName = showName.myBind({name: 'fhh'})
+let obj = newShowName(18) // 打印 fhh, 18
+let obj2 = new newShowName(20) // 打印 undefined, 20
 ```
-MDN里面bind的实现, 但是借助了原生apply方法
+MDN里面bind的实现,
 ```js
 if(!Function.prototype.bind)(function() {
-  var arrayPrototypeSlice = Array.prototype.slice
+  var ArrayPrototypeSlice = Array.prototype.slice
   Function.prototype.bind = function(oThis) {
     if(typeof this !== 'function') {
       throw new TypeError('...')
@@ -195,7 +203,7 @@ if(!Function.prototype.bind)(function() {
           baseArgs.length = baseArgsLength; // reset to default base arguments
           baseArgs.push.apply(baseArgs, arguments);
           return fToBind.apply(
-                 fNOP.prototype.isPrototypeOf(this) ? this : otherThis, baseArgs
+                 fNOP.prototype.isPrototypeOf(this) ? this : oThis, baseArgs
           );
         };
 
