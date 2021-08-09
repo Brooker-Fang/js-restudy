@@ -130,13 +130,13 @@ Function.prototype.myCall = function(context, ...args) {
   if(typeof this !== 'function') {
     throw new TypeError('...')
   }
-  if(context === null || typeof context !== 'object') {
-    this(...args)
-  } else {
-    context.fn = this
-    context.fn(...args)
-    delete context.fn
-  }
+  let ctx = context || window
+  let fn = Symbol()
+  args = args || []
+  ctx[fn] = this
+  ctx[fn](...args)
+  delete ctx.fn
+  
 }
 var name = 'window'
 function showName(age) {
@@ -151,13 +151,12 @@ Function.prototype.myApply = function(context, args) {
   if(typeof this !== 'function') {
     throw new TypeError('...')
   }
-  if(context === null || typeof context !== 'object') {
-    this(...args)
-  } else {
-    context.fn = this
-    context.fn(...args)
-    delete context.fn
-  }
+  let ctx = context || window
+  let fn = Symbol()
+  args = args || []
+  ctx[fn] = this
+  ctx[fn](...args)
+  delete ctx.fn
 }
 var name = 'window'
 function showName(age) {
@@ -168,15 +167,21 @@ showName.myApply({name: 'fhh'}, [18])
 ```
 bind方法模拟
 ```js
-Function.prototype.myBind = function(context, ...arg) {
+Function.prototype.myBind = function(context, ...args) {
   if(typeof this !== 'function') {
     throw new TypeError('...')
   }
+  args = args || []
   return context === null || typeof context !== 'object' ? this : function() {
     context.fn(...args)
     delete context.fn
   }
 }
+var name = 'window'
+function showName(age) {
+  console.log('name===' + this.name + ',age===' + age)
+}
+showName.myBind({name: 'fhh'}, 18)()
 ```
 MDN里面bind的实现, 但是借助了原生apply方法
 ```js
