@@ -121,37 +121,126 @@ function testTimeout2() {
 }
 testTimeout2.call(obj) // obj 
 testTimeout2() // window 
+function testThis
 ```
-## call、apply、bind原理实现
+## 模拟实现call、apply、bind
+call方法模拟
+```js
+Function.prototype.myCall = function(context, ...args) {
+  if(typeof this !== 'function') {
+    throw new TypeError('...')
+  }
+  if(context === null || typeof context !== 'object') {
+    this(...args)
+  } else {
+    context.fn = this
+    context.fn(...args)
+    delete context.fn
+  }
+}
+var name = 'window'
+function showName(age) {
+  console.log('name===' + this.name + ',age===' + age)
+}
+showName(18)
+showName.myCall({name: 'fhh'}, 18)
+```
+apply方法模拟
+```js
+Function.prototype.myApply = function(context, args) {
+  if(typeof this !== 'function') {
+    throw new TypeError('...')
+  }
+  if(context === null || typeof context !== 'object') {
+    this(...args)
+  } else {
+    context.fn = this
+    context.fn(...args)
+    delete context.fn
+  }
+}
+var name = 'window'
+function showName(age) {
+  console.log('name===' + this.name + ',age===' + age)
+}
+showName(18)
+showName.myApply({name: 'fhh'}, [18])
+```
+bind方法模拟
+```js
+Function.prototype.myBind = function(context, ...arg) {
+  if(typeof this !== 'function') {
+    throw new TypeError('...')
+  }
+  return context === null || typeof context !== 'object' ? this : function() {
+    context.fn(...args)
+    delete context.fn
+  }
+}
+```
+MDN里面bind的实现, 但是借助了原生apply方法
+```js
+if(!Function.prototype.bind)(function() {
+  var arrayPrototypeSlice = Array.prototype.slice
+  Function.prototype.bind = function(oThis) {
+    if(typeof this !== 'function') {
+      throw new TypeError('...')
+    }
+     var baseArgs= ArrayPrototypeSlice.call(arguments, 1),
+        baseArgsLength = baseArgs.length,
+        fToBind = this,
+        fNOP    = function() {},
+        fBound  = function() {
+          baseArgs.length = baseArgsLength; // reset to default base arguments
+          baseArgs.push.apply(baseArgs, arguments);
+          return fToBind.apply(
+                 fNOP.prototype.isPrototypeOf(this) ? this : otherThis, baseArgs
+          );
+        };
 
+    if (this.prototype) {
+      // Function.prototype doesn't have a prototype property
+      fNOP.prototype = this.prototype;
+    }
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  }
+}())
+
+```
 ## 面试题
 ```js
 var name = 'window'
  
 var obj = {
-  name: 'p1',
+  name: 'obj',
   test1: function () {
     console.log(this.name)
   },
-  test2: () => console.log(this.name),
+  test2: () => { 
+    console.log(this.name)
+  },
   test3: function () {
     return function () {
       console.log(this.name)
     }
   },
   test4: function () {
-    return () => console.log(this.name)
+    return () => { 
+      console.log(this.name) 
+    }
   },
-  test5: () => {
+  test5: function() {
     setTimeout(() => {
       console.log(this.name)
     })
   },
-  test6: function() {
+  test6: () => {
     setTimeout(() => {
       console.log(this.name)
     })
-  }
+  },
 }
 
 obj.test1()  
@@ -161,14 +250,32 @@ obj.test2()
 obj.test2.call({name:'p2'}) 
  
 obj.test3()()  
-obj.test3().call({name:'p2'})  
-obj.test3.call({name:'p2'})()  
+obj.test3().call({name:'p2'})   
  
 obj.test4()()  
-obj.test4().call({name:'p2'}) 
 obj.test4.call({name:'p2'})() 
+obj.test4().call({name:'p2'}) 
 
 obj.test5()
 obj.test6() 
+
 ```
- 正确答案：obj、p2
+正确答案解析：obj、p2、window、window、window、p2、obj、p2、obj、
+obj、window
+```js
+obj.test1()  // obj obj是上下文对象
+obj.test1.call({name:'p2'}) // p2 call绑定了新的上下文对象
+ 
+obj.test2()  // window test2的外部词法环境是 全局环境，所以肯定指向全局对象
+obj.test2.call({name:'p2'}) // window 箭头函数的this 只与外部词法环境有关，与上下文无关
+ 
+obj.test3()()  // window 返回新的函数，没有指定上下文，默认绑定全局对象
+obj.test3().call({name:'p2'})  // p2 新的函数绑定了上下文
+ 
+obj.test4()()  // obj 返回的新的箭头函数，与test4函数的this一致
+obj.test4.call({name:'p2'})() // p2 同上
+obj.test4().call({name:'p2'}) // obj 与test4函数的this一致
+
+obj.test5() // obj setTimeout 传入的箭头函数，与外部test5的this一致
+obj.test6() // window
+```
