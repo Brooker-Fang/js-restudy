@@ -1,3 +1,8 @@
+## async/await
++ async使得后面的function始终返回一个promise，无论function返回的是普通值还是promise
++ async本质是generator的语法糖
+  + 内置了执行器，相当于自动执行了generator的next方法
+  + await后面可以是promise或普通function，而yield后面必须是thunk函数或promise对象
 ## 如果返回值
 ```js
 async function test() {
