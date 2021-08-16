@@ -45,9 +45,10 @@ console.log(test()) // test
 + 变量容易在不被察觉的情况下覆盖掉
 ```js
 var name = 'window'
-function shoName() {
+function showName() {
   console.log(name)
   if(false) {
+    console.log('这段代码并没执行')
     var name = 'false'
   }
 }
@@ -85,5 +86,7 @@ let、const声明的变量 也在编译时创建，即亦会出现变量提升�
   let a = 1 
 }
 ```
-
-
+## 总结
++ 变量提升的原因是js代码在编译过程中已经对var声明的变量和function函数进行初始化。所以变量提升的本质，其实只是变量创建的过程 和 真实赋值的过程不同步带来的错觉
++ let、const声明的变量也会进行变量提升，但是会形成暂时性死区，所以在执行到赋值代码之前，访问变量的话会报错
++ 关于执行上下文和环境变量可以看这里：https://blog.csdn.net/comedyking/article/details/119722561
