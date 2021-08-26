@@ -38,3 +38,29 @@ console.log(g.next())
 console.log(g.next())
 console.log(g.next())
 ```
++ generator 是可迭代的，可以用for...of 循环遍历它所有的值
+```js
+function* gen() {
+  yield 1
+  yield 2
+  return 3
+}
+const g = gen()
+for(let val of gen) {
+  console.log(val)
+}
+let arr = [1, ...gen]
+```
++ yield* 特殊语法可以将另一个generator函数 嵌入到本generator中
+```js
+function* gen2(){
+  yield 2
+  yield 3
+  return 4
+}
+function* gen() {
+  yield 1
+  yield* gen2()
+  return 5
+}
+```
