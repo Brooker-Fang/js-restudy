@@ -64,3 +64,18 @@ function* gen() {
   return 5
 }
 ```
++ 可以通过next传入参数 给 generator函数内部传参 
+```js
+function* gen() {
+  let getByNext = yield 2
+  let getByNext2 = yield getByNext + 3
+  return getByNext2
+}
+const g = gen()
+g.next() // {value: 2, done: false}
+g.next(4) // {value: 7, done: false} 
+g.next() // {value: undefined, done: true}
+// 第一个next 执行到了 yield 2
+// 第二个next 将4传入 并作为上一次yield的结果，即getByNext = 4，然后执行到下一个yield, 结果为 {value:7, done: false}
+// 第三个next 没有传入参数，所以上一个yield的结果为undefined, 即getByNext2 = undefined, 并继续执行到return，佐伊结果为 {value: undefined, done: true}
+```
