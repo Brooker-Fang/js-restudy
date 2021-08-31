@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  
+</head>
+<body>
+  <div>左列定宽，右列自适应</div>
+  <!-- 
+    方案一
+    <style>
+    .left{
+      width: 100px;
+      background-color: deepskyblue;
+      height: 500px;
+      float: left;
+    }
+    .right {
+      margin-left: 120px;
+      height: 500px;
+      background-color: deepskyblue;
+    }
+  </style>
+    <div class="left"></div>
+    <div class="right"></div> -->
+    <!-- 方案二, 右侧高度与左侧高度对齐 -->
+    <style>
+      .container{
+        display: flex;
+        border: 1px solid blue;
+      }
+      .left{
+        width: 100px;
+        background-color: deepskyblue;
+        height: 500px;
+      }
+      .right {
+        flex: 1;
+        margin-left: 20px;
+        overflow: hidden;
+        background-color: deepskyblue;
+      }
+      .right-child{
+        background-color: red;
+        height: 600px;
+      }
+    </style>
+    <div class="container">
+      <div class="left"></div>
+      <div class="right">
+        <div class="right-child">
+          
+        </div>
+      </div>
+    </div>
+</body>
+</html>
