@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #test11{
+      color: blue;
+    }
+    .test1 .test2 .test3 .test4 .test5 .test6 .test7 .test8 .test9 .test10 .test11{
+      /* 11个class选择器也比不上一个Id选择器，所以不能单纯的用权重值来算，是分档次的   */
+      color: red;
+    }
+
+    #title{
+      color: red;
+    }
+    .container .spa{
+      color: yellow;
+    }
+    
+  </style>
+</head>
+<body>
+  <!-- 当作用于同一个元素时，id选择器 > 多个类选择器 -->
+  <div id="app">
+    <div class="test1" id="test1">
+       <div class="test2">
+         <div class="test3">
+           <div class="test4">
+             <div class="test5">
+               <div class="test6">
+                 <div class="test7">
+                   <div class="test8">
+                     <div class="test9" >
+                       <div class="test10" id="test2">
+                         <div class="test11" id="test11">权</div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+      </div>
+    </div>
+  </div>
+  <!-- 因为作用不在同一个元素  -->
+  <div id="title" class="container">
+    <span class="spa">
+      fdsfds
+    </span>
+  </div>
+</body>
+</html>

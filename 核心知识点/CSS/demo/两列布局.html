@@ -9,8 +9,8 @@
 </head>
 <body>
   <div>左列定宽，右列自适应</div>
-  <!-- 
-    方案一
+  
+    <!-- 方案一 -->
     <style>
     .left{
       width: 100px;
@@ -20,14 +20,13 @@
     }
     .right {
       margin-left: 120px;
-      height: 500px;
       background-color: deepskyblue;
     }
   </style>
     <div class="left"></div>
-    <div class="right"></div> -->
+    <div class="right">大萨达</div>
     <!-- 方案二, 右侧高度与左侧高度对齐 -->
-    <style>
+    <!-- <style>
       .container{
         display: flex;
         border: 1px solid blue;
@@ -38,23 +37,22 @@
         height: 500px;
       }
       .right {
-        flex: 1;
         margin-left: 20px;
-        overflow: hidden;
         background-color: deepskyblue;
       }
       .right-child{
         background-color: red;
-        height: 600px;
+        height: 400px;
       }
     </style>
     <div class="container">
       <div class="left"></div>
       <div class="right">
+        sdasd
         <div class="right-child">
           
         </div>
       </div>
-    </div>
+    </div> -->
 </body>
 </html>
