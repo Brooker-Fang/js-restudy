@@ -288,3 +288,4 @@ obj.test4().call({name:'p2'}) // obj 与test4函数的this一致
 obj.test5() // obj setTimeout 传入的箭头函数，与外部test5的this一致
 obj.test6() // window
 ```
+注意： bind多次绑定只有第一次有效，之后进行绑定不会有效果
