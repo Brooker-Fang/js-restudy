@@ -171,7 +171,7 @@ Function.prototype.myBind = function(context, ...baseArgs) {
     // 如果作为构造函数，则this指向新的对象
     return fn.apply(this instanceof fBound ? this : ctx, [...baseArgs, ...args])
   }
-  // 创建空函数
+  // 创建空函数, 避免修改到原来的原型对象
   const noop = function() {}
   noop.prototype = this.prototype
   fBound.prototype = new noop()
