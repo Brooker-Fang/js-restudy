@@ -33,3 +33,30 @@ vuex
 ## 如果子组件改变props里的数据会发生什么
 如果是基本类型，会报错
 如果是引用类型，不报错，原数据也会跟着改
+
+## beforeCreate 和 created区别
+## vue 中用过哪些修饰器
+事件修饰符
+.stop
+.prevent
+.capture
+.self
+.once
+.passive
+
+按键修饰符
+.up
+.down
+.left
+.right
+.enter
+.esc
+.space
+.delete
+.tab
+
+其他常用
+.lazy
+.number
+.trim
+.sync
