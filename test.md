@@ -228,7 +228,66 @@ function throttle(fn, wait) {
 Object.keys()
 Object.getOwnPropertyNames()
 Reflect.ownKeys()
-function deepClone() {
-  
+function deepClone(obj, weakMap = new WeakMap()) {
+  if(obj === null && typeof obj !== 'object') return obj
+  if(weakMap.has(obj)) {
+    return weakMap.get(obj)
+  }
+  let nObject = new obj.constructor()
+  weakMap.set(obj, nObject)
+  Reflect.ownKeys(obj).forEach(key => {
+    if(obj.hasOwnProperty(key)) {
+      nObject[key] = deepClone(obj[key])
+    }
+  })
+  return nObject
+}
+function flat(arr) {
+  return arr.reduce((prev, current) => {
+    return prev.concat(Array.isArray(current) ? flat(current) : prev)
+  }, [])
+}
+function sumFn(a,b,c){return a+ b + c};
+let sum = curry(sumFn);
+sum(2)(3)(5)//10
+sum(2,3)(5)//10
+function curry(fn, ...args) {
+  let fnLen = fn.length
+  let argLen = args.length
+  if(argLen >= fnLen) {
+    fn(...args)
+  } else {
+    return function(...args2) {
+      return curry(fn, ...args, ...args2)
+    }
+  }
+}
+function jsonp({url, params, callback}) {
+  let callbackId = jsonp.id || 1
+  let callbacks = jsonp.callbacks || []
+  callbacks[callbackId] = callback
+  params.cb = `JSON.callbacks[${callbackId}]`
+  let paramsStr = Object.keys(params).forEach((key, index) => {
+    return (index > 0 ? '&' : ?) + key + '=' + params[key]
+  }, '')
+  let script = document.createElement('script')
+  script.setAttribute('src', url + paramsStr)
+  document.body.appendChild(script)
+}
+function Person() {}
+function Man() {}
+Man.prototype = new Person()
+Man.prototype.constructor = Man
+
+function Person(name) {}
+function Man(name, age) {
+  Person.call(this, name)
+  this.age = age
+}
+
+function inherit(child, parent) {
+  let childPro = parent.prototype
+  child.prototype = childPro
+  child.prototype = child
 }
 ```
