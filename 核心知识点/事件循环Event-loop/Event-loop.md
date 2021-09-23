@@ -1,15 +1,19 @@
-# Event-loop
+# Event-loop事件循环
 + Event-loop是一种代码执行机制，js线程会有一个任务执行栈，任务分为同步任务和异步任务，
 + 同步任务必须执行完成后才会继续往下执行，异步任务则会被放入任务队列
 + 异步任务又分为 宏任务和微任务
 + 当主线程的同步任务执行完后，会将当前微任务队列 推入 主线程执行栈，执行完所有微任务后，在将宏任务推入执行栈
 + 宏任务执行过程中，如果遇到 异步任务，依旧会推入任务队列，以此循环操作，就是Event-loop执行机制
-+ 浏览器和Node环境的EventLoop执行机制不同，setTimeout、setInterval属于宏任务，Promise.then cache finally 、process.nextTick属于微任务
++ setTimeout、setInterval属于宏任务，Promise.then cache finally、MutationObserver 、process.nextTick属于微任务
 
 简单理解：
 + 每个任务（函数）的执行过程都有可能产生宏任务和微任务
 + 每个任务执行的最后，需要先执行完所有的微任务，在开始执行宏任务
 
+## Node和浏览器事件循环的不同
+差异在NodeV10之前，Node11之后就没有差异了。
+Node在执行微任务之前，会先去执行process.nextTick里的任务，执行完后，才会去执行微任务。
+Node事件循环分为几个阶段，每个阶段执行完就会去执行微任务。而浏览器则是在宏任务执行完后去执行微任务
 ## 思考题
 ### 案例一
 ```js

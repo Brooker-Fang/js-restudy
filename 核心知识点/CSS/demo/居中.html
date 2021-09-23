@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .parent{
+      border: 1px solid black;
+      width: 200px;
+      height: 200px;
+    }
+    .child{
+      border: 1px solid deepskyblue;
+      width: 50px;
+      height: 50px;
+    }
+    .parent1{
+      display: flex;
+    }
+    .child1{
+      margin: auto;
+    }
+    .parent2{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .parent3{
+      display: grid;
+    }
+    .child3{
+      margin: auto;
+    }
+
+    .parent4{
+      position: relative;
+    }
+    .child4{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -25px;
+      margin-top: -25px;
+    }
+
+
+    .parent5{
+      position: relative;
+    }
+    .child5{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body >
+  <div style="display: flex;">
+    <div class="parent parent1">
+      <div class="child child1"></div>
+    </div>
+    <div class="parent parent2">
+      <div class="child child2"></div>
+    </div>
+    <div class="parent parent3">
+      <div class="child child3"></div>
+    </div>
+    <div class="parent parent4">
+      <div class="child child4"></div>
+    </div>
+    <div class="parent parent5">
+      <div class="child child5"></div>
+    </div>
+  </div>
+  
+</body>
+</html>
