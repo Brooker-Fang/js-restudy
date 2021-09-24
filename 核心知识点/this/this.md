@@ -289,3 +289,8 @@ obj.test5() // obj setTimeout 传入的箭头函数，与外部test5的this一�
 obj.test6() // window
 ```
 注意： bind多次绑定只有第一次有效，之后进行绑定不会有效果
+### 箭头函数和普通函数区别
++ 箭头函数没有this，会继承上层的this，箭头函数里的this在代码书写完就确定了，普通函数的this会在执行时确定
++ 箭头函数没有arguments对象
++ 箭头函数不能使用new实例化，因为new时需要将this指向实例对象，而箭头函数没有this
++ 箭头函数不能使用yield，所以不能作为generator函数

@@ -5,6 +5,7 @@ Set是类数组，可以用Array.from 转换为数组
 + add(val)
 + delete(val)
 + has(val)
++ set.size 返回集合个数
 + clear() 清空集合
 ### 遍历方法
 键值其实就是数组的索引，从0开始
@@ -15,7 +16,7 @@ Set.prototype[Symbol.iterator] === Set.prototype.values() // true
 ...new Set([1,2,3]) // 即默认遍历values
 ```
 + entries()
-+ forEach()
++ forEach(fn, this) 第二个参数为第一个参数fn的this指向
 ```js
 const set = new Set()
 set.add(1).add({name: 'fhh'}).add(3)
@@ -55,3 +56,53 @@ obj = null // { name: 'fhh'}对象没有被引用，所以wSet里的会被回收
 console.log(wSet.has(obj)) // false
 ```
 WeakSet主要场景是用来表示 某对象是否存在
+
+
+## Map字典
+
+### 操作
++ set(key, value)
++ get(key)
++ has(key)
++ delete(key)
++ map.size
++ clear()
+
+## 遍历方法
++ Keys()
++ values() 返回值的迭代器对象
++ entries() 返回所以成员的迭代器对象, 默认迭代器
+```js
+Map[Symbol.iterator] === Map.entries //true
+for(let key of map) {
+  ...
+}
+[...map]
+```
++ forEach(fn, this) 第二个参数为fn的this指向
+```js
+const map = new Map()
+map.set('name', 'fhh')
+map.set('age', 18)
+console.log(map.values()) // MapIterator {'fhh', 18}
+console.log(map.entries()) // MapIterator {'name' => 'fhh', 'age' => 18}
+console.log([...map]) // [['name', 'fhh'], ['age', 18]]
+const obj = {
+  getMap: function(val, key, map) {
+    console.log(key + '='+ val + ',' + map)
+  }
+}
+map.forEach(function(val, key, map) {
+  this.getMap(val, key, map)
+}, obj)
+```
+
+## WeakMap
+WeakMap也是键值对集合，但是WeakMap键只能为对象，即为弱引用，值可以为任意值。
+WeakMap不能遍历。
+
+### 操作
++ set(key, val)
++ has(key, val)
++ get(key, val)
++ delete(val)
