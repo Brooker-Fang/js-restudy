@@ -187,3 +187,41 @@ console.log('script end');
   settimeout
 */
 ```
+
+### 案例四
+```js
+function wait() {
+  return new Promise(resolve =>
+    setTimeout(resolve, 1000)
+  )
+}
+async function main1() {
+  const x = await wait();
+  const y = await wait();
+  const z = await wait();
+  console.log('end');
+}
+main1(); 
+async function main2() {
+  const x = wait();
+  const y = wait();
+  const z = wait();
+  await x;
+  await y;
+  await z;
+  console.log('end');
+}
+main2(); 
+
+async function main3() {
+  const x = wait();
+  const y = wait();
+  const z = wait();
+  x,y,z;
+  console.log('end');
+}
+main3(); 
+```
+main2：3s多后打印end
+main2：1s多后打印end，相当于同时执行了3个
+main3: 同步打印end
