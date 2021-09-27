@@ -60,3 +60,12 @@ vuex
 .number
 .trim
 .sync
+## Vuex和Redux区别
++ vuex只能配合vue使用，redux比较通用
++ vuex异步actions处理然后commit提交，redux则是通过中间件处理
+
+## v-if、v-show、v-html 的原理是什么，它是如何封装的
+
+## nextTick原理
++ 会把nextTick的回调函数用异步的形式放入异步任务队列
++ 优先使用Promise、mutationObserver、setInterval、setTimeout
