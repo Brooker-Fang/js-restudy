@@ -65,7 +65,9 @@ vuex
 + vuex异步actions处理然后commit提交，redux则是通过中间件处理
 
 ## v-if、v-show、v-html 的原理是什么，它是如何封装的
-
++ v-if 不会生成vnode，render的时候不会渲染
++ v-show 会生成vnode，render渲染的时候会修改节点的display属性
++ v-html 会先移除节点下的所有节点，通过innerHTML添加内容
 ## nextTick原理
 + 会把nextTick的回调函数用异步的形式放入异步任务队列
 + 优先使用Promise、mutationObserver、setInterval、setTimeout
