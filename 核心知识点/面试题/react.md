@@ -1,3 +1,5 @@
+https://vue3js.cn/interview/React/React.html#%E4%B8%80%E3%80%81%E6%98%AF%E4%BB%80%E4%B9%88
+
 ## 什么是fiber
 ## 为什么需要fiber
 + 大型项目里，组件树会变得很大，递归遍历的成本很高，并且造成主线程被持续占用，结果就是主线程的布局、动画等周期性任务就无法立即得到处理，造成卡顿，影响用户体验
@@ -100,3 +102,10 @@ PureComponent
 legacy模式：ReactDOM.render，当前React使用的方式，不支持新功能。即还是同步递归更新模式
 blocking模式：ReactDOM.createBlockingRoot，作为迁移concurrent模式的降级模式
 concurrent模式：ReactDOM.createRoot 开启所有新功能模式。如setState不管是在原生事件或合成事件都会变成异步批处理的方式、时间调度实现异步可中断的任务
+
+## 你对immutable有了解吗？它有什么作用
++ 对 Immutable对象的任何修改或添加删除操作都会返回一个新的 Immutable对象
++ Immutable 实现和深拷贝最大的区别，就是避免复制了所有节点造成的性能损耗
++ 实现原理：用一种数据结构来保存数据，当数据被修改时，会返回新对象，并且新对象会尽可能利用之前的数据结构而不会对内存造成浪费。
++ 其出现场景在于弥补 Javascript 没有不可变数据结构的问题
++ 在react中使用可以带来性能优化，主要在shouldComponentUpdate生命周期进行对比，提供了简洁高效的判断数据是否变化的方法，从而减少渲染次数
