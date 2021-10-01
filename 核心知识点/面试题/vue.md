@@ -1,73 +1,39 @@
 https://juejin.cn/post/6930897845369356295
 https://mp.weixin.qq.com/s/8RJGp9M9yNx-LMcN5q8gUQ
+
+## v-if和v-for哪个优先级更高？怎么优化
+## vue组件的data为什么必须是个函数？并且Vue的根实例则没有此限制？
+## vue中key的作用和工作原理
+## vue的diff算法
+## vue组件化的理解
+## 对MVC、MVP、MVVM理解
+## 对MVVM的理解
+## vue性能优化
+## 简述vue模板编译过程
+## Vue3的了解
+## Vue-Router中的导航钩子有哪些
+## Vue响应式的理解
+## 路由有哪些模式？有什么不同？
+## 前端路由怎么实现
+## vue-router实现原理
+## vuex的使用和理解
+## vue为什么要求组件模板只能有一个根元素
 ## Vue的事件绑定原理
-编译阶段会根据正则，匹配@ 或 v-on字符串，然后解析出事件类型和 事件名或者表达式，
-然后在组件初始化时，去添加相应的事件，在组件销毁前，去移除事件
 ## v-model中的实现原理及如何自定义v-model 
-v-model其实是 input 和  value的语法糖
-编译阶段会解析v-model指令，存到model对象，主要存value、callback、expression三个属性，
-然后在初始化组件时，根据转换为input 和 value
 ## 生命周期
-beforeCreate
-created：数据初始化完成，实例初始化，但还未挂载
-beforeMount
-mounted：实例已经挂载，可以获取到dom
-activated：缓存组件激活
-beforeUpdate：组件更新之前，可以进一步更改数据，不会发生重新渲染
-updated
-beforeDestroy
-destroyed
 ## 组件通信
-provide/inject
-props
-$attrs/$listener
-parent/children
-$on/$emit
-ref
-vuex
 ## 插槽与作用域插槽的区别
-普通插槽作用域是 父组件
-作用域插槽的作用域是 子组件。
-作用域插槽 会被解析承函数，当子组件渲染时，会调用此函数进行渲染
 ## 为什么data是个函数并且返回一个对象呢
 ## 如果子组件改变props里的数据会发生什么
-如果是基本类型，会报错
-如果是引用类型，不报错，原数据也会跟着改
 
 ## beforeCreate 和 created区别
 ## vue 中用过哪些修饰器
-事件修饰符
-.stop
-.prevent
-.capture
-.self
-.once
-.passive
-
-按键修饰符
-.up
-.down
-.left
-.right
-.enter
-.esc
-.space
-.delete
-.tab
-
-其他常用
-.lazy
-.number
-.trim
-.sync
 ## Vuex和Redux区别
-+ vuex只能配合vue使用，redux比较通用
-+ vuex异步actions处理然后commit提交，redux则是通过中间件处理
 
 ## v-if、v-show、v-html 的原理是什么，它是如何封装的
-+ v-if 不会生成vnode，render的时候不会渲染
-+ v-show 会生成vnode，render渲染的时候会修改节点的display属性
-+ v-html 会先移除节点下的所有节点，通过innerHTML添加内容
-## nextTick原理
-+ 会把nextTick的回调函数用异步的形式放入异步任务队列
-+ 优先使用Promise、mutationObserver、setInterval、setTimeout
+## nextTick的理解和nextTick原理
+## computed和watcher有什么不同
+## 对象新属性无法更新视图，删除属性无法更新视图，为什么？怎么办？
+## 如果子组件改变props里的数据会发生什么## computed如何实现传参
+
+## provide和inject是响应式的吗？
