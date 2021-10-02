@@ -1,156 +1,124 @@
 ```js
-let p2 = new MyPromise((res, rej) => {
-  res(1)
-}).then(res => {
-  console.log(res)
-  return 3
-}).then(res => {
-  console.log(res)
-}
 const PENDING = 'PENDING'
 const FULFILLED = 'FULFILLED'
 const REJECTED = 'REJECTED'
-class MyPromise {
-  status = PENDING
+class MyPromise{
+  state = PENDING
   value = null
   error = null
   successCallbacks = []
   failCallbacks = []
-  constructor(executor) {
+  constructor(exec) {
     try {
-      executor(this.resolve, this.reject)
+      exec(this.resolve, this.reject)
     } catch(e) {
       this.reject(e)
     }
   }
   resolve = (val) => {
-    if(this.status === PENDING) {
-      this.status = FULFILLED
+    if(this.state === PENDING) {
+      this.state = FULFILLED
       this.value = val
-      while(this.successCallback.length) {
-        this.successCallback.shift()(val)
-      }
-    }
-  }
-  reject = (error) => {
-    if(this.status === PENDING) {
-      this.status = REJECTED
-      this.error = error
-      while(this.fallCallbacks.length) {
-        this.failCallbacks.shift()(error)
+      while(this.successCallbacks.length) {
+        this.successCallbacks.shift()(val)
       }
     }
   }
   then = (successCallback, failCallback) => {
-    successCallback = typeof successCallback === 'function' ? successCallback :(val) => val
-    failCallback = typeof failCallback === 'function' ? failCallback :(error) => {throw error}
-    let p2 = new MyPromise((resolve, reject) => {
-      if(this.status === FULFILLED) {
+    successCallback = successCallback ? successCallback : (val) => val
+    failCallback = failCallback ? failCallback : (err) => {throw err}
+    let p = new MyPromise((resolve, reject) => {
+      if(this.state === FULFILLED) {
         setTimeout(() => {
           try {
-            let x = successCallback(this.value)
-            resolvePromise(p2, x, resolve, reject)
-          } catch (e) {
-            reject(e)
-          }
-        })
-      } else if (this.status === REJECTED) {
-        setTimeout(() => {
-          try {
-            let x = failCallback(this.error)
-             resolvePromise(p2, x, resolve, reject)
+            let res = successCallback(res)
+            resolvePromise(p,res, resolve, reject)
           } catch(e) {
             reject(e)
           }
         })
-
-      } else {
-        this.successCallbacks.push(() => {
-           setTimeout(() => {
-            try {
-              let x = successCallback(this.value)
-              resolvePromise(p2, x, resolve, reject)
-            } catch (e) {
-              reject(e)
-            }
-          })
+      } else if (this.state === REJECTED) {
+        setTimeout(() => {
+          try {
+            let res = failCallback(res)
+            resolvePromise(p,res, resolve, reject)
+          } catch(e) {
+            reject(e)
+          }
         })
-        this.failCallbacks.push(() => {
+      } else {
+        this.successCallback.push(() => {
           setTimeout(() => {
-            try {
-              let x = failCallback(this.error)
-              resolvePromise(p2, x, resolve, reject)
+          try {
+              let res = resolve(res)
+              resolvePromise(p,res, resolve, reject)
             } catch(e) {
               reject(e)
             }
-          })
+        })
         })
       }
     })
     return p
   }
   static resolve = (val) => {
-    if (val instanceof MyPromise) return val
+    if(val instanceof MyPromise) return val
     return new MyPromise((resolve, reject) => resolve(val))
   }
   finally = (cb) => {
-    return this.then((val) => {
+    return this.then(val => {
       return MyPromise.resolve(cb()).then(() => val)
-    }, (err) => {
-      return MyPromise.resolve(cb()).then(() => { throw error });
+    }, err => {
+      return MyPromise.resolve(cb()).then(() => val, () => { throw err})
     })
   }
   all = (arr) => {
+    let len = arr.len
     let index = 0
     let res = []
-    return new MyPromise((resolve,reject) => {
-      
+    return new MyPromise((resolve, reject)=>{
       function addDate(key, val) {
         res[key] = val
         index++
-        if(res.length === index) {
+        if(index === len) {
           resolve(res)
         }
       }
-      arr.forEach((promise, index) => {
-        if (promise instanceof MyPromise) {
-          promise.then(val => addDate(index, val))
+      arr.forEach((item, index) => {
+        if(item instanceof MyPromise) {
+          item.then(val => addData(index, val), err => reject(err))
         } else {
-          addDate(index, promise)
+          addDate(index, item)
         }
       })
     })
+    
   }
 }
-function resolvePromise(promise2, x, resolve, reject) {
-  if (promise2 === x) {
-    reject(new TypeError(''))
-  } else if (x instanceof MyPromise) {
-    res.then(val => resolve(val), (err) => reject(err))
-  } else if (x && typeof x ==='object' || typeof x === 'function') {
+function resolvePromise(p, x, resolve, reject) {
+  if (p === x) {
+    throw('')
+  } else if (x instance MyPromise) {
+    x.then(val => resolve(val))
+  } else if (x && typeof x === 'Object') {
     let then = x.then
-    try {
-      then.call(x, (val)=> {
-      resolvePromise(promise2, val, resolve, reject)
-      }, (err) => {
-        reject(err)
-      })
-    } catch (e) {
-      reject(e)
-    }
-  } else {  
+    then.call(x, (val) => {
+      resolvePromise(p,val, resolve,reject)
+    }, (err) => {
+      reject(err)
+    })
+  } else {
     resolve(x)
   }
 }
-const arr = [1,2,3,1,2,3]
-const arr = [...new Set(arr)
-function MyNew(fn, ...args) {
-  let obj = Object.create(fn.prototype)
-  let res = fn.call(obj, ...args)
+[...new Set(arr)]
+function myNew(fn) {
+  const obj = Object.create(fn.prototype)
+  let res= fn()
   return res && typeof res === 'object' ? res : obj
 }
-function MyInstanceof(left, right) {
-  let leftPro = left.__protp__
+function myInstanceof(left, right){
+  let leftPro = left.__proto__
   let rightPro = right.prototype
   while(leftPro) {
     if(leftPro === rightPro) {
@@ -160,134 +128,34 @@ function MyInstanceof(left, right) {
   }
   return false
 }
-function MyBind(context, ...args) {
+function myCall(context, ...args) {
+  const ctx = context || window
+  const sym = Symbol()
+  const fn = this
+  ctx.sym = fn
+  ctx[sym](...args)
+  delete ctx.sym
+}
+function myBind(context, ...args) {
   const ctx = context || window
   const fn = this
   const bound = function(...args2) {
     return fn.call(this instanceof bound ? this : ctx, ...args, ...args2)
   }
-  const noop = function(){}
+  const noop = function() {}
+  noop.prototype = this.prototype
   bound.prototype = noop.prototype
   return bound
 }
-function MyApply(context, ...args) {
-  const ctx = context || window
-  args = args || []
-  console.log(args)
-  let sym = Symbol()
-  ctx[sym] = this
-  ctx[sym](...args)
-  delete ctx[sym]
-}
-function Person(name) {
-  this.name = name
-}
-function Man(name, age) {
-  Person.call(this, name)
-  this.age =age
-}
-function inherit(child, parent) {
-  let childPro = Object.prototype(parent.prototype)
-  child.prototype = childPro
-  child.prototype.constructor = child
-}
-function MyObjectCreate(prototype) {
-  function noop() {}
+function MyCreate(prototype) {
+  const noop = function(){}
   noop.prototype = prototype
   return new noop()
 }
-function MyDebounce(fn, wait, immediate = false) {
-  let timer = null;
-  return function(...args) {
-    let self = this
-    if(immediate) {
-      if(!timer) {
-        timer = setTimeout(()=> {
-          fn.call(self, ...args)
-        }, wait)
-      }
-    } else {
-      timer && clearTimeout(timer)
-      timer = setTimeout(()=> {
-        fn.call(self, ...args)
-      }, wait)
-    }
+function debounce(fn, wait, immediate = false) {
+  let timer = null
+  if(immediate) {
+    timer
   }
-}
-function throttle(fn, wait) {
-  let last = null
-  return function(...args) {
-    let self = this
-    let now = +new Date()
-    if(!last ||  now - last > wait) {
-      fn.call(self, ...args)
-      last = now
-    }
-  }
-}
-Object.keys()
-Object.getOwnPropertyNames()
-Reflect.ownKeys()
-function deepClone(obj, weakMap = new WeakMap()) {
-  if(obj === null && typeof obj !== 'object') return obj
-  if(weakMap.has(obj)) {
-    return weakMap.get(obj)
-  }
-  let nObject = new obj.constructor()
-  weakMap.set(obj, nObject)
-  Reflect.ownKeys(obj).forEach(key => {
-    if(obj.hasOwnProperty(key)) {
-      nObject[key] = deepClone(obj[key])
-    }
-  })
-  return nObject
-}
-function flat(arr) {
-  return arr.reduce((prev, current) => {
-    return prev.concat(Array.isArray(current) ? flat(current) : prev)
-  }, [])
-}
-function sumFn(a,b,c){return a+ b + c};
-let sum = curry(sumFn);
-sum(2)(3)(5)//10
-sum(2,3)(5)//10
-function curry(fn, ...args) {
-  let fnLen = fn.length
-  let argLen = args.length
-  if(argLen >= fnLen) {
-    fn(...args)
-  } else {
-    return function(...args2) {
-      return curry(fn, ...args, ...args2)
-    }
-  }
-}
-function jsonp({url, params, callback}) {
-  let callbackId = jsonp.id || 1
-  let callbacks = jsonp.callbacks || []
-  callbacks[callbackId] = callback
-  params.cb = `JSON.callbacks[${callbackId}]`
-  let paramsStr = Object.keys(params).forEach((key, index) => {
-    return (index > 0 ? '&' : ?) + key + '=' + params[key]
-  }, '')
-  let script = document.createElement('script')
-  script.setAttribute('src', url + paramsStr)
-  document.body.appendChild(script)
-}
-function Person() {}
-function Man() {}
-Man.prototype = new Person()
-Man.prototype.constructor = Man
-
-function Person(name) {}
-function Man(name, age) {
-  Person.call(this, name)
-  this.age = age
-}
-
-function inherit(child, parent) {
-  let childPro = parent.prototype
-  child.prototype = childPro
-  child.prototype = child
 }
 ```
