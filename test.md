@@ -154,8 +154,78 @@ function MyCreate(prototype) {
 }
 function debounce(fn, wait, immediate = false) {
   let timer = null
-  if(immediate) {
-    timer
+  return function(...args) {
+    let self = this
+    if(!immediate) {
+      timer && clearTimeout(timer)
+      timer = setTimeout(() => {
+        fn.call(self, ...args)
+      })
+    } else {
+      if(!timer) {
+        timer = setTimeout(() => {
+          timer = null
+          fn.call(self, ...args)
+        })
+      }
+    }
+  }
+  
+}
+Object.keys()
+Object.getOwnPropertyNames()
+Reflect.ownKeys()
+function deepClone(obj, weakMap = new WeakMap()) {
+  if(obj === null || typeof obj! === 'object') return obj
+  if(weakMap.has(obj)) {
+    return weakMap.get(obj)
+  }
+  let tar = new obj.constructor()
+  weakMap.set(obj, tar)
+  Reflect.ownKeys(obj).forEach(key => {
+    if(Object.hasOwnProperty(key)) {
+      tar[key] = deepClone(obj[key])
+    }
+  })
+  return tar
+}
+function bfsClone(obj) {
+  let map = new WeakMap()
+  let tar = new obj.constructor()
+  let queue = []
+  queue.push([tar, obj])
+  map.set(obj, tar)
+  while(queue.length) {
+    let [to, from] = queue.shift()
+    Reflect.ownKeys(from).forEach(key => {
+      if(Object.hasOwnProperty(key)) {
+        let item = obj[key]
+        if(map.has(item)) {
+          to[key] = map.get(item)
+          return
+        }
+        if(item && typeof item === 'object') {
+          let tar = new item.constructor()
+          to[key] = tar
+          queue.push([tar, item])
+          map.set(item, tar)
+        } else {
+          to[key] = item 
+        }
+      }
+    })
   }
 }
+function curry(fn, ...args) {
+  let len = fn.length
+  let argLen = args.length
+  if (len <= argLen) {
+    fn(...args)
+  } else {
+    return function(...args2) {
+      return curry(fn, ...args, ...args2)
+    }
+  }
+}
+
 ```
