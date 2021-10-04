@@ -84,7 +84,7 @@ function toNonExponential(num) {
 ```
 ## 相关api
 ### parseInt(string, radix)：将字符串转为数值
-只传入第一个参数：
+0、如果第二个参数为0或者不传，则默认值为10
 
 1、parseInt会从第一个非空格字符开始转换 ，直到解析到一个无效的数值字符，如果不是数值字符(如果是正负号后面紧跟着数值除外)，则返回NaN
 ```js

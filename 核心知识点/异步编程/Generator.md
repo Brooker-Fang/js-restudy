@@ -1,13 +1,13 @@
 ## generator函数
 + 要创建generator函数，需要用function*
 + generator函数被调用时，不会运行其代码，而是返回 generator object的特殊对象来管理流程。
-+ 只有调用 generator obj的next才会开始执行函数，并且
++ 只有调用 generator 函数返回的对象 的next才会开始执行函数，并且执行到yield暂停执行
 ```js
 function* gen(){
   console.log(11)
   yield 1
   yield () => 2
-  yield () => return new Promise(resolve => resolve()) 
+  yield () => new Promise(resolve => resolve()) 
   return 3
 }
 const g = gen()
@@ -67,6 +67,7 @@ function* gen() {
 + 可以通过next传入参数 给 generator函数内部传参 
 ```js
 function* gen() {
+  // getByNext会被赋值给 next传入的参数，没有传参为undefined
   let getByNext = yield 2
   let getByNext2 = yield getByNext + 3
   return getByNext2
@@ -77,5 +78,5 @@ g.next(4) // {value: 7, done: false}
 g.next() // {value: undefined, done: true}
 // 第一个next 执行到了 yield 2
 // 第二个next 将4传入 并作为上一次yield的结果，即getByNext = 4，然后执行到下一个yield, 结果为 {value:7, done: false}
-// 第三个next 没有传入参数，所以上一个yield的结果为undefined, 即getByNext2 = undefined, 并继续执行到return，佐伊结果为 {value: undefined, done: true}
+// 第三个next 没有传入参数，所以上一个yield的结果为undefined, 即getByNext2 = undefined, 并继续执行到return，所以结果为 {value: undefined, done: true}
 ```

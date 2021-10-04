@@ -227,5 +227,31 @@ function curry(fn, ...args) {
     }
   }
 }
+function Person() {}
+function Man() {}
+Man.prototype = new Person()
+Man.prototype.constructor = Man
 
+function Man() {
+  Person.call()
+}
+function extendByPro(obj) {
+  const obj = Object.create(obj)
+  return obj
+}
+
+
+function inherit(child, parent) {
+  const pro = Object.create(parent.prototype)
+  child.prototype = pro
+  child.prototype.constructor = child
+}
+function Person() {}
+function Man() {}
+inherit(Man, Person)
+function Man() {
+  Person.call()
+}
+!import => 行内元素 => id选择器 => 类选择器、伪类、属性 => 元素、伪元素选择器 => 通配符、兄弟选择器
+obj、p2、window、window\window\p2\obj\p2\obj\obj\window
 ```
