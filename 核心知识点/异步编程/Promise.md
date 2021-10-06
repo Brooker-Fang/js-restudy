@@ -1,4 +1,6 @@
 
+面试题：
+https://juejin.cn/post/6844904077537574919#heading-21
 ## 5中静态方法
 ## Promise.all(promiseArr)
 + 接受一个promise数组作为参数，当所有promise都settled时，promise.all才会resolve，并且将结果数组传入resolve，并且结果数组的顺序与传入的promise数组一致
@@ -27,3 +29,71 @@ Promise.all(arr.map(item => axios.item.then(res => ()).catch(e => ())))
 
 ## Promise.resolve(val) 使用给定的value创建一个resolved的promise
 ## Promise.reject(val) 使用给定的error创建一个rejected的promise
+
+## promise链式调用then 和 同一个promise多次调用then的区别
+链式调用then，都会返回一个新的promise，所以上一个then的结果会传递给新的promise。
+而同一个promise多次调用then，接收的都是同一个结果
+```js
+const promise = new Promise((resolve, reject) => {
+  resolve(1)
+}).then(res => {
+  console.log(res)
+    return 2
+}).then(res => {
+  console.log(res)
+})
+// 1 2
+
+const promise = new Promise((resolve, reject) => {
+  resolve(1)
+})
+promise.then(res => {
+  console.log(res)
+    return 2
+})
+promise.then(res => {
+  console.log(res)
+})
+// 1 1
+```
+## 返回任意一个非 promise 的值都会被包裹成 promise 对象
+```js
+Promise.resolve().then(() => {
+  return new Error('error') // 这里相当于 return Promise.resolve(new Error)
+}).then((val) => {
+  console.log('then ' + val)
+}).catch(e => {
+  console.log('catch' + val)
+})
+// then Error: error
+```
+
+## 如果promise.then传入的不是函数，则会被忽略
+```js
+Promise.resolve(1)
+  .then(2)
+  .then(Promise.resolve(3))
+  .then({})
+  .then(console.log)
+  // 前面3个then都被忽略
+```
+
+## finally和then一样也是一个微任务，return没有效果，
+```js
+Promise.resolve('1')
+  .then(res => {
+    console.log(res)
+  })
+  .finally(() => {
+    console.log('finally')
+  })
+Promise.resolve('2')
+  .finally(() => {
+    console.log('finally2')
+  	return 'finally2'
+  })
+  .then(res => {
+    console.log(res)
+  })
+```
+打印：1 finally2 finally 2
