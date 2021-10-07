@@ -30,6 +30,15 @@ Promise.all(arr.map(item => axios.item.then(res => ()).catch(e => ())))
 ## Promise.resolve(val) 使用给定的value创建一个resolved的promise
 ## Promise.reject(val) 使用给定的error创建一个rejected的promise
 
+
+# 面试题
+## 描述一下Promise
++ Promise是一个对象，表示异步操作的最终完成或者失败，一般配合.then,.catch使用
++ Promise有三种状态，待执行Pending、Fulfilled、Rejected
++ Promise状态经过改变后就不在改变
++ Promise允许链式调用，then\cache\finally方法返回新的Promise
++ then\finally 都是微任务
+
 ## promise链式调用then 和 同一个promise多次调用then的区别
 链式调用then，都会返回一个新的promise，所以上一个then的结果会传递给新的promise。
 而同一个promise多次调用then，接收的都是同一个结果
