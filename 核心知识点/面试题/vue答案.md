@@ -1,6 +1,17 @@
 https://juejin.cn/post/6930897845369356295
 https://mp.weixin.qq.com/s/8RJGp9M9yNx-LMcN5q8gUQ
 
+## vue初始化过程
++ 实例方法和实例属性的初始化
++ 初始组件实例相关属性
++ 初始化自定义事件
++ beforeCreate
++ 数据初始化，对数据做响应式处理
++ created
++ 执行$mount准备挂载
++ 创建虚拟dom
++ 执行patch，如果是首次渲染的话，是将传入的虚拟dom转为真实dom，然后执行挂载
++ 挂载后执行mounted
 ## v-if和v-for哪个优先级更高？怎么优化
 + 从源码上看，在处理ast时，是先处理v-for的，所以v-for优先级更高
 + v-for优先级高，一起使用会导致每一项渲染时都会做判断

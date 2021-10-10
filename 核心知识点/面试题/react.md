@@ -41,7 +41,7 @@ createElement将dom 转为vNode，而Fiber也是通过vNode构建的
 React会形成两颗Fiber树，一个是正在内存中构建的workInProgress Fiber树，一个是正在屏幕显示的真实dom对应的current Fiber树，两棵树通过alternate属性连接。无论更新还是挂载，都会在内存中先构建workInProgress Fiber树，然后在将构建好的树切换为current Fiber，在渲染为真实dom。区别在于 挂载时，current Fiber树是空的，而更新时，可以通过复用current Fiber节点去生成workInProgress Fiber树。
 ## key值的作用
 和type值一起作为元素的唯一标识，便于复用
-## diff算法和vue的异同点
+## diff算法和vue的异同点 
 相同点：都是深度优先、同层比较，都借助key作为判断节点是否相同的条件之一
 单节点：
 通过key和type对比是否可以复用。
@@ -70,6 +70,8 @@ forwardRef还有一个作用是转发高阶组件里的ref
 卸载时：componentWillUnmount
 函数组件的生命周期：
 会在函数执行后 执行一次副作用函数，useEffect
+
+getSnapshotBeforeUpdate： 捕获 render 之前的 DOM 状态
 ## 事件系统
 react有自己的一套事件合成机制，一方面可以解决不同平台的兼容性，一方面为了统一管理事件，提高性能。
 主要是通过事件委托，并且记录当前事件发送的状态来实现。最新的react源码是将事件绑定到 组件的最外层元素上，以前是把所有事件绑定到document文档上
@@ -145,3 +147,20 @@ JSX会通过babel转为React.createElement的形式，生成虚拟dom，在根�
 + 
 ## react项目怎么捕获错误
 getDerivedStateFromError、componentDidCatch
+
+## useEffect和useLayoutEffect区别
++ 都是处理副作用的
++ useEffect是异步执行的，而useLayoutEffect是同步执行的，会阻塞渲染
+
+## hooks在平时开发中需要注意的问题
++ 不要再循环、条件中调用hook
++ 使用useState时，使用push、
+
+## react源码工作流程
++ 初始化阶段
++ render阶段：构建 Fiber 对象，构建链表，在链表中标记要执行的 DOM 操作 ，可中断。先从上向下走，构建节点对应的 Fiber 对象，然后再从下向上走，构建 Fiber 对象及链表。
+  + beginWork
++ commit阶段：根据构建好的链表进行 DOM 操作，不可中断。
+  + before mutation：这个阶段dom节点还没有被渲染到解密上去
+  + mutation：这个阶段负责dom渲染
+  + layout：这个阶段处理dom渲染完毕之后的收尾逻辑

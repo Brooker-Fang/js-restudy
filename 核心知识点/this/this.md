@@ -294,3 +294,4 @@ obj.test6() // window
 + 箭头函数没有arguments对象
 + 箭头函数不能使用new实例化，因为new时需要将this指向实例对象，而箭头函数没有this
 + 箭头函数不能使用yield，所以不能作为generator函数
++ 箭头函数不能通过其他方式修改this

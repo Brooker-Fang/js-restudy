@@ -1,6 +1,6 @@
 https://juejin.cn/post/6930897845369356295
 https://mp.weixin.qq.com/s/8RJGp9M9yNx-LMcN5q8gUQ
-
+## vue初始化过程
 ## v-if和v-for哪个优先级更高？怎么优化
 ## vue组件的data为什么必须是个函数？并且Vue的根实例则没有此限制？
 ## vue中key的作用和工作原理
