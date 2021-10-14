@@ -94,6 +94,7 @@ setState可以是同步也可以是异步。
   使用：1、使用Class.contextType属性接收，但只能订阅单一的context
   2、使用React.Provider/Consumer组件 传递context
 注意事项：如果Provider的value值是对象，要放到this.state的数据里，避免每次value对比值都不同，引起不必要的更新
+2、redux
 ## 函数组件和类组件对比
 hooks比较好实现状态和逻辑的复用，逻辑可以实现更小颗粒度的复用，便于维护
 函数组件避免了this
