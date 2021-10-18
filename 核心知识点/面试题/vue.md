@@ -37,3 +37,5 @@ https://mp.weixin.qq.com/s/8RJGp9M9yNx-LMcN5q8gUQ
 ## 如果子组件改变props里的数据会发生什么## computed如何实现传参
 
 ## provide和inject是响应式的吗？
+
+## vue在处理数组对象并且对象属性比较深的情况怎么做处理

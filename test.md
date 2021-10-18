@@ -138,5 +138,6 @@ function createImage(url) {
   })
 
 }
+
 ```
 
