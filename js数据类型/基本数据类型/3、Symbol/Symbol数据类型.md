@@ -32,7 +32,7 @@ let s = new Symbol() // Uncaught TypeError: Symbol is not a constructor
 ## 使用场景
 ### 使用Symbol作为对象属性名
 + 可以把一些不需要被访问或者操作的属性 使用Symbol来定义
-+ 因为不会被Object.keys() 或for...in 枚举到,并且JSON.stringify转换时，Symbol属性也会被跳过
++ 因为不会被Object.keys()、Object.getOwnPropertyNames、for...of 或for...in 枚举到,并且JSON.stringify转换时，Symbol属性也会被跳过
 + 不过Object.assign浅拷贝时还是能拷贝的到
 + 可以使用Object.getOwnPropertySymbols方法获取对象的所有Symbol属性的数组
 ```js

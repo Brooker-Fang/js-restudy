@@ -1,5 +1,9 @@
 xss: 跨站脚本攻击，指往html文件或dom中注入恶意脚本，从而在用户浏览页面时理由注入的恶意脚本对用户实施攻击的一种手段
-csp：内容安全策略，csp的核心思想是让服务器决定浏览器能够加载那些资源，让服务器决定浏览器是否能够执行内联js代码
+csp：内容安全策略，csp的核心思想是让服务器决定浏览器能够加载那些资源，让服务器决定浏览器是否能够执行内联js代码。
++ 本质就是建立白名单，开发者明确告诉浏览器那些外部资源可以加载和执行，我们只需要配置规则，如何拦截是由浏览器自己实现的，可以通过这种方式尽量减少XSS攻击
++ 通常有两种方式来开启csp
+  + 一种是设置http header 的Content-Security-Policy
+  + 一种是设置meta标签的方式<meta http-equiv="Content-Security-Policy">
 ## 危害
 + 可以窃取Cookie信息，如通过document.cookie获取cookie
 + 可以监听用户行为，如addEventListener添加键盘事件，获取用户输入

@@ -106,3 +106,31 @@ Promise.resolve('2')
   })
 ```
 打印：1 finally2 finally 2
+
+### 通过catch捕获到reject后，在catch后面还能继续执行then方法吗？如果能执行执行的是第几个回调函数
+
+```js
+
+Promise.reject(2)
+    .catch(r => {
+        // 捕获到错误，执行
+        console.log('catch1');
+    })
+    // 错误已经被捕获，后边的`then`都顺序执行，且只执行`then`的第一个回调（resolve的回调）
+    .then(v => {
+        console.log('then1');
+    }, r => {
+        console.log('catch2');
+    })
+    .catch(r => {
+        // 前边没有未捕获的错误，不执行
+        console.log('catch3');
+    })
+    .then(v => {
+        console.log('then2');
+    }, r => {
+        console.log('catch4');
+    });
+    
+```
+打印：cache1 then1 then2
