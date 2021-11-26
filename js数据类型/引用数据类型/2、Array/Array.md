@@ -8,6 +8,8 @@ pop：删除数组最后一个，返回被删除元素
 shift：删除数组第一个元素，返回被删除的元素
 reserve：翻转数组，返回反转后的新数组
 splice: 返回被删除的元素组成的新数组
+fill: 用一个固定值填充一个数组中从起始索引到终止索引内的全部原始，不包括终止索引
+sort
 #### sort(fn || null)
 如果没有传参，默认按照UTF-16排序
 如果传入函数比较，
@@ -28,13 +30,19 @@ slice(start, end)：获取子数组，不包含end
 toString：将数组的元素用逗号拼接成字符串，返回拼接后的字符串
 indexOf
 lastIndexOf：从后面查找，返回索引
-concat:连接新数组
+concat: 合并两个或多个数组，并返回新数组
 forEach
 map
 filter
 every
 some
 reduce
+reduceRight
+keys
+values
+entries
+flat
+from
 ## 判断是否为数组类型
 优先使用：isArray => Object.prototype.toString.call => instanceof
 ```js
