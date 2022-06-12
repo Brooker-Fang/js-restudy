@@ -29,9 +29,3 @@ npm的包版本通常需要遵守 semver版本规范
 + 如果版本号有个^，在执行npm install时，x保持不变，y和z永远安装最新的版本
 + ~表示x和y保持不变，z永远安装最新的版本
 + 但是，如果有package-lock.json锁死版本，则还是安装lock里锁死的版本号
-
-## npm install 命令
-+ 全局安装 npm install -g : 安装到本机的node指定的全局包文件里，并且将库的可执行命令添加到 本机的环境变量里，如npm install vue-cli -g, 就会将vue 命令添加到本机的环境变量，则所有地方都能使用，要安装到全局的主要是一些工具，如vue-cli脚手架创建工具
-+ 项目安装 npm install：安装到当前项目的node_modules，只有当前项目文件下才能使用
-
-## npm install 安装流程
