@@ -16,13 +16,25 @@ https://cloud.tencent.com/developer/article/1555982
 + 没有lock文件：
   + 从 npm 远程仓库获取库信息
   + 根据dependencies和devDependencies构建依赖关系，如安装axios，里面又依赖了follow-redirects库，
-  + 然后从npm registry仓库下载压缩包到本机的npm 缓存目录下的_cacache/content/（可以通过 npm get cache 查看缓存路径）
+  + 然后从npm registry仓库下载压缩包到本机的npm 缓存目录下的_cacache/content-v2/（可以通过 npm get cache 查看缓存路径）
   + 将压缩包解压到当前项目的node_modules 完成安装，并生成lock文件
 + 有lock文件
   + 检查 package.json 中的依赖版本是否和 package-lock.json 中的依赖有冲突，如果不一致则重新构建依赖关系，如果一致则根据lock中对应的库的integrity 属性 到 cache目录下的_cacache/index-v5 找到对应的库信息（保存着缓存库在本机的文件路径），找到对应库的压缩包 解压到 node_modules文件下
 
-## 其他常用命令
 
+## 缓存 
+在执行 npm install 或 npm update命令下载依赖后，除了将依赖包安装在node_modules 目录下外，还会在本机设置的npm的缓存目录缓存一份。
+
+可以通过 npm get cache 获取路径地址
+
+在这个目录下又存在两个目录：content-v2、index-v5，content-v2 目录用于存储 tar包的缓存，而index-v5目录用于存储tar包的 hash。
+
+npm 在执行安装时，可以根据 package-lock.json 中存储的 integrity、version、name 生成一个唯一的 key 对应到 index-v5 目录下的缓存记录，从而找到 tar包的 hash，然后根据 hash 再去找缓存的 tar包直接使用。
+## 其他常用命令
++ 获取/设置npm源仓库地址
+  + npm config get registry
+  + npm config set registry [address]
+  + npm install [package] -D --registry=[address]
 + 获取npm缓存的仓库地址
   + npm get cache
 + 卸载依赖
@@ -49,3 +61,4 @@ https://cloud.tencent.com/developer/article/1555982
 ### Npm是怎么解决解决版本冲突
 版本冲突是多个包依赖了同一个包，但是依赖的版本不同，这时候就要选择一个版本来安装，我们可以简单的把规则定为使用高版本的那个。
 ### Npm是怎么解决解决版本冲突
+
