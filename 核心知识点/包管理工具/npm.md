@@ -8,6 +8,7 @@ https://cloud.tencent.com/developer/article/1555982
 + version：当前安装在 node_modules中的版本
 + resolved: 库 具体的下载地址
 + integrity: 库 的hash值，来验证已安装的软件包是否改动、是否失效
++ requires: 对应子依赖的依赖，与子依赖的 package.json 中 dependencies的依赖项相同
 ## 可以通过 npm i --timing=true --loglevel=verbose 或者 npm install package --timing=true --loglevel=verbose 命令看到 npm install 的完整过程
 ## npm install 安装流程
 ![avatar](./npm.png)
@@ -55,10 +56,47 @@ npm 在执行安装时，可以根据 package-lock.json 中存储的 integrity�
   + 如果依赖层级过多，目录会嵌套很多层，导致node—_modules目录会非常庞大，并且可能超过window 系统中 文件路径的最长字符，出现不可预知问题。
   + 而且相同的依赖并没有进行复用，导致许多相同依赖冗余
 ### npm 3.x版本
-3.x将嵌套结构改为扁平结构，即无论直接依赖 还是 依赖的子依赖 都放在node_modules的根目录下
+3.x将嵌套结构改为扁平结构，即无论直接依赖 还是 依赖的子依赖 都放在node_modules的根目录下。
+优点：解决了上面部分问题
+缺点：
+  + package.json只会锁定 依赖的大版本，（即x.y.z, x保持不变，xy可能发送变化）在某些依赖包小版本更新后，可能造成依赖结构的改动，依赖结构的不确定性可能会给程序带来不可预知的问题
+  + 当出现版本依赖冲突时，执行npm install具有不确定性
+
+### npm 5.x版本
+为了解决 npm install 的不确定性问题，在 npm 5.x 版本新增了 package-lock.json 文件，而安装方式还沿用了 npm 3.x 的扁平化的方式。
+
+package-lock.json 的作用是锁定依赖结构，即只要你目录下有 package-lock.json 文件，那么你每次执行 npm install 后生成的 node_modules 目录结构一定是完全相同的。
 
 
 ### Npm是怎么解决解决版本冲突
-版本冲突是多个包依赖了同一个包，但是依赖的版本不同，这时候就要选择一个版本来安装，我们可以简单的把规则定为使用高版本的那个。
-### Npm是怎么解决解决版本冲突
+版本冲突是多个包依赖了同一个包，但是依赖的版本不同。如A依赖着C@1.0.0，B依赖着C@2.0.0。
+npm会将先下载的子依赖先放到node_modules目录下，后下载的子依赖放在父依赖的node_modules，如 安装顺序是A B , 即执行命令
+```js
+npm install A 
+npm install B
+```
+则node_modules的目录结构如下:
+```js
+node_modules
+  - A
+  - B
+    - node_modules
+       - C@2.0.0
+  - C@1.0.0
+```
 
+安装顺序是 B A, 则node_modules的目录结构如下：
+```js
+node_modules
+  - A
+    - node_modules
+      - C@1.0.0
+  - B
+  - C@2.0.0
+```
+
+### Npm是怎么解决循环依赖
+扁平化结构就可以解决循环依赖
+
+## pnpm
+https://juejin.cn/post/6932046455733485575#heading-5
