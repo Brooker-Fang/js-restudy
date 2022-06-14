@@ -100,3 +100,12 @@ node_modules
 
 ## pnpm
 https://juejin.cn/post/6932046455733485575#heading-5
+
+
+## npm-shrinkwrap.json 和 package-lock.json区别
+https://www.jianshu.com/p/5ef0aabbf5ee
+
+## .npmrc配置文件
+## npm run start 和 npm start
+npm start和 npm run start是等效关系。
+一些比较常用的命令可以省略run，类似的还有npm stop、npm test等等，而其他的一些不太通用的命令项则只能通过npm run <命令项>的形式执行
