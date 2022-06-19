@@ -90,3 +90,76 @@ let、const声明的变量 也在编译时创建，即亦会出现变量提升�
 + 变量提升的原因是js代码在编译过程中已经对var声明的变量和function函数进行初始化。所以变量提升的本质，其实只是变量创建的过程 和 真实赋值的过程不同步带来的错觉
 + let、const声明的变量也会进行变量提升，但是会形成暂时性死区，所以在执行到赋值代码之前，访问变量的话会报错
 + 关于执行上下文和环境变量可以看这里：https://blog.csdn.net/comedyking/article/details/119722561
+
+
+## 面试题
+### 一
+```js
+var count = 100
+function foo() {
+  count = 200
+}
+foo()
+console.log(count)
+
+```
+
+### 二
+```js
+function foo() {
+  console.log(count)
+  var count = 200
+  console.log(count)
+}
+var count = 100
+foo()
+```
+
+### 三
+
+```js
+var count = 100
+function foo() {
+  console.log(count)
+}
+function bar() {
+  var count = 200
+  console.log(count)
+  foo()
+}
+bar()
+console.log(count)
+```
+
+### 四
+```js
+var count = 100
+
+function foo() {
+  console.log(count)
+  return
+  var count = 200
+}
+foo()
+```
+
+### 五
+```js
+function foo() {
+  count = 100 // js引擎会对这种情况做特殊处理，将m设置为 全局变量
+}
+foo()
+console.log(count)
+
+```
+
+### 六
+```js
+function foo() {
+  var a = b = 10
+}
+foo()
+
+console.log(a)
+console.log(b)
+```
