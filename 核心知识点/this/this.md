@@ -99,6 +99,36 @@ testThis() // window
 setTimeout(function(){
   console.log(this) // window
 })
+
+```
+## 内置函数的this
+一些内置函数的this，主要还是看其内部的实现
+### setTimeout
+```js
+// 猜测其内部实现并没有指定上下文，所以this指向window
+setTimeout(function() => {
+  console.log(this)
+}, 2000)
+```
+
+### dom元素的click事件
+```js
+// 内部实现时 可能将上下文指定为div，所以this指向div元素
+div.onclick = function() {
+  console.info(this)
+}
+div.addEventListens('click', function() {
+  console.info(this)
+})
+```
+### 数组的forEach/map/filter 等方法
+
+```js
+// this指向window
+[1,2,3,4].forEach(function() {
+  console.info(this)
+})
+
 ```
 ## 箭头函数
 + 箭头函数的主要设计目的就是 以特定的方式改变this的行为特性
