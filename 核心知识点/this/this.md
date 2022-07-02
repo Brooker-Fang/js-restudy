@@ -249,6 +249,29 @@ if(!Function.prototype.bind)(function() {
 
 ```
 ## 面试题
+
+### 零
+```js
+var name = "window"
+var person = {
+  name: "person",
+  sayName: function() {
+    console.log(this.name)
+  }
+}
+
+function sayName() {
+  var say = person.sayName
+  say()
+  person.sayName();
+  (person.sayName)();
+  (say = person.sayName)(); // 相当于 say = person.sayName，say()
+}
+sayName()
+
+```
+答案：window、person、person、window
+### 一
 ```js
 var name = 'window'
  
@@ -301,6 +324,7 @@ obj.test6()
 ```
 正确答案解析：obj、p2、window、window、window、p2、obj、p2、obj、
 obj、window
+### 二
 ```js
 obj.test1()  // obj obj是上下文对象
 obj.test1.call({name:'p2'}) // p2 call绑定了新的上下文对象
@@ -319,6 +343,49 @@ obj.test5() // obj setTimeout 传入的箭头函数，与外部test5的this一�
 obj.test6() // window
 ```
 注意： bind多次绑定只有第一次有效，之后进行绑定不会有效果
+
+### 三
+
+```js
+var name = "window"
+function Person(name) {
+  this.name = name
+  this.test1 = function() {
+    console.log(this.name)
+  }
+  this.test2 = () => console.log(this.name)
+
+  this.test3 = function() {
+    return function() {
+      console.log(this.name)
+    }
+  }
+
+  this.test4 = function() {
+    return () => {
+      console.log(this.name)
+    }
+  }
+}
+
+var p1 = new Person("p1")
+var p2 = new Person("p2")
+
+p1.test1() // p1
+p1.test1.call(p2) // p2
+
+p1.test2() // p1
+p1.test2.call(p2) // p1
+
+p1.test3()() // window
+p1.test3.call(p2)() // window
+p1.test3().call(p2) // p2
+
+p1.test4()() // p1
+p1.test4.call(p2)() // p2
+p1.test4().call(p2) // p1
+```
+
 ### 箭头函数和普通函数区别
 + 箭头函数没有this，会继承上层的this，箭头函数里的this在代码书写完就确定了，普通函数的this会在执行时确定
 + 箭头函数没有arguments对象
